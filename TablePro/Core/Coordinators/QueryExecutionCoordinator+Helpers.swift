@@ -500,26 +500,19 @@ extension QueryExecutionCoordinator {
             errorMessage: error.localizedDescription
         )
 
+        guard AppSettingsManager.shared.ai.enabled else { return }
+
         let errorMessage = error.localizedDescription
         let queryCopy = sql
-        Task { [weak self, parent] in
-            guard let self else { return }
-            if AppSettingsManager.shared.ai.enabled {
-                let wantsAIFix = await AlertHelper.showQueryErrorWithAIOption(
-                    title: String(localized: "Query Execution Failed"),
-                    message: errorMessage,
-                    window: parent.contentWindow
-                )
-                if wantsAIFix {
-                    parent.showAIChatPanel()
-                    parent.aiViewModel?.handleFixError(query: queryCopy, error: errorMessage)
-                }
-            } else {
-                AlertHelper.showErrorSheet(
-                    title: String(localized: "Query Execution Failed"),
-                    message: errorMessage,
-                    window: parent.contentWindow
-                )
+        Task { [parent] in
+            let wantsAIFix = await AlertHelper.showQueryErrorWithAIOption(
+                title: String(localized: "Query Execution Failed"),
+                message: errorMessage,
+                window: parent.contentWindow
+            )
+            if wantsAIFix {
+                parent.showAIChatPanel()
+                parent.aiViewModel?.handleFixError(query: queryCopy, error: errorMessage)
             }
         }
     }

@@ -321,6 +321,11 @@ struct ColumnLayoutState: Equatable {
     var columnWidths: [String: CGFloat] = [:]
     var columnOrder: [String]?
     var hiddenColumns: Set<String> = []
+
+    mutating func applyGeometry(from other: ColumnLayoutState) {
+        columnWidths = other.columnWidths
+        columnOrder = other.columnOrder
+    }
 }
 
 struct TabExecutionState: Equatable {

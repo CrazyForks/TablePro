@@ -9,7 +9,17 @@ import SwiftUI
 extension TableViewCoordinator {
     func tableViewColumnDidResize(_ notification: Notification) {
         guard !isRebuildingColumns else { return }
+        cacheCurrentColumnLayout()
         scheduleLayoutPersist()
+    }
+
+    private func cacheCurrentColumnLayout() {
+        guard tabType == .table,
+              let connectionId,
+              let tableName,
+              !tableName.isEmpty,
+              let layout = captureColumnLayout() else { return }
+        layoutPersister.cacheLayout(layout, for: tableName, connectionId: connectionId)
     }
 
     func tableViewColumnDidMove(_ notification: Notification) {

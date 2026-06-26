@@ -452,10 +452,13 @@ struct MainEditorContentView: View {
                         Divider()
                     }
 
-                    if let error = tab.display.activeResultSet?.errorMessage {
+                    if let error = tab.display.activeResultSet?.errorMessage ?? tab.execution.errorMessage {
                         InlineErrorBanner(
                             message: error,
-                            onDismiss: { tab.display.activeResultSet?.errorMessage = nil }
+                            onDismiss: {
+                                tab.display.activeResultSet?.errorMessage = nil
+                                tab.execution.errorMessage = nil
+                            }
                         )
                         Divider()
                     }
@@ -679,7 +682,9 @@ struct MainEditorContentView: View {
             set: { newValue in
                 coordinator.isUpdatingColumnLayout = true
                 if let index = tabManager.selectedTabIndex {
-                    tabManager.mutate(at: index) { $0.columnLayout = newValue }
+                    tabManager.mutate(at: index) { tab in
+                        tab.columnLayout.applyGeometry(from: newValue)
+                    }
                 }
                 Task { @MainActor in
                     coordinator.isUpdatingColumnLayout = false

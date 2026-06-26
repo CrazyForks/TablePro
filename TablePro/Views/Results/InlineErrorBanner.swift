@@ -13,14 +13,16 @@ struct InlineErrorBanner: View {
     var onDismiss: (() -> Void)?
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(alignment: .top, spacing: 8) {
             Image(systemName: "exclamationmark.triangle.fill")
                 .foregroundStyle(.red)
-            Text(message)
-                .font(.subheadline)
-                .lineLimit(3)
-                .textSelection(.enabled)
-            Spacer()
+            ScrollView(.vertical) {
+                Text(message)
+                    .font(.subheadline)
+                    .textSelection(.enabled)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .frame(maxHeight: 96)
             Button {
                 ClipboardService.shared.writeText(message)
             } label: {

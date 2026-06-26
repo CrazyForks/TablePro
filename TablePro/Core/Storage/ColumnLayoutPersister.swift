@@ -40,6 +40,12 @@ final class FileColumnLayoutPersister: ColumnLayoutPersisting {
 
     func save(_ layout: ColumnLayoutState, for tableName: String, connectionId: UUID) {
         guard !layout.columnWidths.isEmpty else { return }
+        cacheLayout(layout, for: tableName, connectionId: connectionId)
+        writeEntries(loadEntries(for: connectionId), for: connectionId)
+    }
+
+    func cacheLayout(_ layout: ColumnLayoutState, for tableName: String, connectionId: UUID) {
+        guard !layout.columnWidths.isEmpty else { return }
 
         let persisted = PersistedColumnLayout(
             columnWidths: layout.columnWidths,
@@ -49,7 +55,6 @@ final class FileColumnLayoutPersister: ColumnLayoutPersisting {
         var entries = loadEntries(for: connectionId)
         entries[tableName] = persisted
         cache[connectionId] = entries
-        writeEntries(entries, for: connectionId)
     }
 
     func load(for tableName: String, connectionId: UUID) -> ColumnLayoutState? {

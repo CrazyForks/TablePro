@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- The Columns and Add Row buttons and clicks in the SQL editor no longer stop working after the autocomplete window opens. The autocomplete now stays inside the editor and closes when you click outside it.
+- Resizing a data grid column by dragging its edge no longer sorts the column by accident.
+- Hidden columns stay hidden after you resize or reorder columns in the data grid; they no longer reappear on their own.
+- Data grid column widths no longer snap back to their previous size when the grid reloads, sorts, or paginates right after a resize.
+- SQL errors from data grid filters now show in a selectable, copyable banner above the results instead of a small alert window.
+- The filter bar's autocomplete no longer pops up on empty space; it appears only while you are typing a word.
+- Pressing Escape to close the filter autocomplete no longer also closes the filter bar.
+- The SQL editor no longer leaks an Escape key handler each time you close a tab with the Find bar open.
+
 ## [0.53.0] - 2026-06-25
 
 ### Added

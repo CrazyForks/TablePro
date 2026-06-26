@@ -69,6 +69,7 @@ final class JumpToDefinitionModel {
                 if let textView {
                     BezelNotification.show(symbolName: "questionmark", over: textView)
                 }
+                cancelHover()
                 return
             }
             if links.count == 1 {
