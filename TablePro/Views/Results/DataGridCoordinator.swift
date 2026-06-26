@@ -98,6 +98,25 @@ final class TableViewCoordinator: NSObject, NSTableViewDelegate, NSTableViewData
         return binding
     }
 
+    func resolvedColumnLayout(binding: ColumnLayoutState) -> ColumnLayoutState? {
+        let saved = savedColumnLayout(binding: binding)
+        let liveWidths = currentColumnWidths()
+        guard !liveWidths.isEmpty else { return saved }
+        return (saved ?? ColumnLayoutState()).mergingWidths(liveWidths)
+    }
+
+    private func currentColumnWidths() -> [String: CGFloat] {
+        guard let tableView else { return [:] }
+        var widths: [String: CGFloat] = [:]
+        for column in tableView.tableColumns
+        where column.identifier != ColumnIdentitySchema.rowNumberIdentifier {
+            guard let dataIndex = dataColumnIndex(from: column.identifier),
+                  let name = identitySchema.columnName(for: dataIndex) else { continue }
+            widths[name] = column.width
+        }
+        return widths
+    }
+
     func captureColumnLayout() -> ColumnLayoutState? {
         guard let tableView else { return nil }
         let tableRows = tableRowsProvider()

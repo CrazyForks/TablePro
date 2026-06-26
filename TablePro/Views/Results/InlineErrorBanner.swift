@@ -10,6 +10,7 @@ import SwiftUI
 
 struct InlineErrorBanner: View {
     let message: String
+    var onFixWithAI: (() -> Void)?
     var onDismiss: (() -> Void)?
 
     var body: some View {
@@ -23,6 +24,10 @@ struct InlineErrorBanner: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             .frame(maxHeight: 96)
+            if let onFixWithAI {
+                Button(String(localized: "Fix with AI")) { onFixWithAI() }
+                    .controlSize(.small)
+            }
             Button {
                 ClipboardService.shared.writeText(message)
             } label: {

@@ -266,7 +266,7 @@ struct DataGridView: NSViewRepresentable {
 
         if !latestRows.columns.isEmpty {
             coordinator.isRebuildingColumns = true
-            let savedLayout = coordinator.savedColumnLayout(binding: columnLayout)
+            let savedLayout = coordinator.resolvedColumnLayout(binding: columnLayout)
             reconcileColumnPool(
                 tableView: tableView,
                 coordinator: coordinator,

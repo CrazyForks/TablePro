@@ -483,6 +483,7 @@ extension QueryExecutionCoordinator {
         connection conn: DatabaseConnection
     ) {
         parent.currentQueryTask = nil
+        parent.lastQueryErrorSQL = sql
         parent.tabManager.mutate(tabId: tabId) { tab in
             tab.execution.errorMessage = error.localizedDescription
             tab.execution.isExecuting = false
@@ -499,22 +500,6 @@ extension QueryExecutionCoordinator {
             wasSuccessful: false,
             errorMessage: error.localizedDescription
         )
-
-        guard AppSettingsManager.shared.ai.enabled else { return }
-
-        let errorMessage = error.localizedDescription
-        let queryCopy = sql
-        Task { [parent] in
-            let wantsAIFix = await AlertHelper.showQueryErrorWithAIOption(
-                title: String(localized: "Query Execution Failed"),
-                message: errorMessage,
-                window: parent.contentWindow
-            )
-            if wantsAIFix {
-                parent.showAIChatPanel()
-                parent.aiViewModel?.handleFixError(query: queryCopy, error: errorMessage)
-            }
-        }
     }
 
     func restoreSchemaAndRunQuery(_ schema: String) async {

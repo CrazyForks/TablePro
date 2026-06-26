@@ -422,8 +422,25 @@ struct MainEditorContentView: View {
     // MARK: - Results Section
 
     @ViewBuilder
+    private func executionErrorBanner(tab: QueryTab) -> some View {
+        if let error = tab.execution.errorMessage,
+           tab.display.activeResultSet?.errorMessage == nil,
+           tab.display.resultSets.count <= 1 {
+            InlineErrorBanner(
+                message: error,
+                onFixWithAI: AppSettingsManager.shared.ai.enabled
+                    ? { coordinator.fixErrorWithAI(error: error) }
+                    : nil,
+                onDismiss: { tab.execution.errorMessage = nil }
+            )
+            Divider()
+        }
+    }
+
+    @ViewBuilder
     private func resultsSection(tab: QueryTab) -> some View {
         VStack(spacing: 0) {
+            executionErrorBanner(tab: tab)
             switch tab.display.resultsViewMode {
             case .structure:
                 if let tableName = tab.tableContext.tableName {
@@ -452,13 +469,10 @@ struct MainEditorContentView: View {
                         Divider()
                     }
 
-                    if let error = tab.display.activeResultSet?.errorMessage ?? tab.execution.errorMessage {
+                    if let error = tab.display.activeResultSet?.errorMessage {
                         InlineErrorBanner(
                             message: error,
-                            onDismiss: {
-                                tab.display.activeResultSet?.errorMessage = nil
-                                tab.execution.errorMessage = nil
-                            }
+                            onDismiss: { tab.display.activeResultSet?.errorMessage = nil }
                         )
                         Divider()
                     }

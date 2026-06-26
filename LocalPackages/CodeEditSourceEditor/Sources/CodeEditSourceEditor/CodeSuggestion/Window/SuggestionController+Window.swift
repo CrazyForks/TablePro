@@ -57,6 +57,11 @@ extension SuggestionController {
                 newWindowOrigin.y += cursorRect.height
             }
 
+            // Keep the top edge within the upper limit so the panel never overlaps chrome above the editor
+            if newWindowOrigin.y + windowSize.height > upperLimit {
+                newWindowOrigin.y = max(lowerLimit, upperLimit - windowSize.height)
+            }
+
             isWindowAboveCursor = true
             window.setFrameOrigin(newWindowOrigin)
         } else {

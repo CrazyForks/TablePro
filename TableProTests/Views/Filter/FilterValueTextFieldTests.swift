@@ -159,6 +159,12 @@ struct FilterValueTextFieldTests {
         #expect(!FilterValueTextField.shouldOfferTokenCompletion(fieldText: "name ", cursor: 99))
     }
 
+    @Test("A trailing non-BMP character counts as non-whitespace and still offers completion")
+    func testTokenCompletion_trailingAstralCharacter() {
+        let text = "name😀"
+        #expect(FilterValueTextField.shouldOfferTokenCompletion(fieldText: text, cursor: (text as NSString).length))
+    }
+
     @Test("Escape dismisses the popup when one is visible")
     func testEscapeOutcome_dismissesVisiblePopup() {
         #expect(FilterValueTextField.escapeOutcome(popupVisible: true, recentlyDismissedPopup: false) == .dismissPopup)

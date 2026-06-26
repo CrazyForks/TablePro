@@ -54,8 +54,8 @@ struct FilterValueTextField: NSViewRepresentable {
         let nsText = fieldText as NSString
         guard nsText.length > 0 else { return false }
         let clamped = min(max(cursor, 0), nsText.length)
-        guard clamped > 0,
-              let scalar = Unicode.Scalar(nsText.character(at: clamped - 1)) else { return false }
+        guard clamped > 0 else { return false }
+        guard let scalar = Unicode.Scalar(nsText.character(at: clamped - 1)) else { return true }
         return !CharacterSet.whitespaces.contains(scalar)
     }
 
@@ -266,6 +266,9 @@ struct FilterValueTextField: NSViewRepresentable {
             textView: NSTextView,
             doCommandBy commandSelector: Selector
         ) -> Bool {
+            if commandSelector != #selector(NSResponder.cancelOperation(_:)) {
+                escapeDismissedPopup = false
+            }
             if commandSelector == #selector(NSResponder.insertNewline(_:)) {
                 if suggestionPopover != nil {
                     acceptCurrentSelection(submitting: submitsOnAccept)

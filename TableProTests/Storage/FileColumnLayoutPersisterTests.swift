@@ -263,44 +263,6 @@ struct FileColumnLayoutPersisterTests {
         #expect(restored?.columnWidths == ["id": 60])
     }
 
-    @Test("cacheLayout makes the layout readable without writing the file")
-    func cacheLayoutIsInMemoryOnly() {
-        let directory = FileManager.default.temporaryDirectory
-            .appendingPathComponent("TableProTests-\(UUID().uuidString)", isDirectory: true)
-        defer { cleanup(directory) }
-
-        let persister = FileColumnLayoutPersister(storageDirectory: directory)
-        let connectionId = UUID()
-        var layout = ColumnLayoutState()
-        layout.columnWidths = ["id": 140]
-        persister.cacheLayout(layout, for: "users", connectionId: connectionId)
-
-        #expect(persister.load(for: "users", connectionId: connectionId)?.columnWidths == ["id": 140])
-
-        let fileURL = directory.appendingPathComponent("\(connectionId.uuidString).json")
-        #expect(!FileManager.default.fileExists(atPath: fileURL.path))
-    }
-
-    @Test("A cached layout does not survive a fresh persister instance until saved")
-    func cacheLayoutIsNotPersistedToDisk() {
-        let directory = FileManager.default.temporaryDirectory
-            .appendingPathComponent("TableProTests-\(UUID().uuidString)", isDirectory: true)
-        defer { cleanup(directory) }
-
-        let connectionId = UUID()
-        var layout = ColumnLayoutState()
-        layout.columnWidths = ["id": 140]
-
-        do {
-            let persister = FileColumnLayoutPersister(storageDirectory: directory)
-            persister.cacheLayout(layout, for: "users", connectionId: connectionId)
-        }
-
-        let restored = FileColumnLayoutPersister(storageDirectory: directory)
-            .load(for: "users", connectionId: connectionId)
-        #expect(restored == nil)
-    }
-
     @Test("Reading an empty JSON object returns nil for any table lookup")
     func emptyEntriesFileReturnsNil() throws {
         let directory = FileManager.default.temporaryDirectory

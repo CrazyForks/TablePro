@@ -53,4 +53,28 @@ struct ColumnLayoutStateTests {
 
         #expect(layout.hiddenColumns == ["secret"])
     }
+
+    @Test("Merging live widths overrides saved widths and adds new ones")
+    func mergingWidthsOverridesAndAdds() {
+        var saved = ColumnLayoutState()
+        saved.columnWidths = ["id": 60, "name": 200]
+        saved.columnOrder = ["id", "name"]
+        saved.hiddenColumns = ["secret"]
+
+        let merged = saved.mergingWidths(["name": 320, "email": 240])
+
+        #expect(merged.columnWidths == ["id": 60, "name": 320, "email": 240])
+        #expect(merged.columnOrder == ["id", "name"])
+        #expect(merged.hiddenColumns == ["secret"])
+    }
+
+    @Test("Merging an empty live width map leaves the layout unchanged")
+    func mergingEmptyWidthsIsNoOp() {
+        var saved = ColumnLayoutState()
+        saved.columnWidths = ["id": 60]
+
+        let merged = saved.mergingWidths([:])
+
+        #expect(merged.columnWidths == ["id": 60])
+    }
 }

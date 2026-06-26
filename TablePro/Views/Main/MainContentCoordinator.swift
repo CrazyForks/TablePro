@@ -179,6 +179,7 @@ final class MainContentCoordinator {
 
     @ObservationIgnored internal var queryGeneration: Int = 0
     @ObservationIgnored internal var currentQueryTask: Task<Void, Never>?
+    @ObservationIgnored internal var lastQueryErrorSQL: String?
     @ObservationIgnored internal var tableLoadTasks: [UUID: (token: UUID, task: Task<Void, Never>)] = [:]
     @ObservationIgnored internal var redisDatabaseSwitchTask: Task<Void, Never>?
     @ObservationIgnored private var changeManagerUpdateTask: Task<Void, Never>?
@@ -564,6 +565,12 @@ final class MainContentCoordinator {
     func showAIChatPanel() {
         inspectorProxy?.showInspector()
         rightPanelState?.activeTab = .aiChat
+    }
+
+    func fixErrorWithAI(error: String) {
+        guard let query = lastQueryErrorSQL else { return }
+        showAIChatPanel()
+        aiViewModel?.handleFixError(query: query, error: error)
     }
 
     /// Set up the plugin driver for query building dispatch on the query builder and change manager.
