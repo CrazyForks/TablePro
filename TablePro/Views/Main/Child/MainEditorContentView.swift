@@ -431,7 +431,7 @@ struct MainEditorContentView: View {
                 onFixWithAI: AppSettingsManager.shared.ai.enabled
                     ? { coordinator.fixErrorWithAI(error: error) }
                     : nil,
-                onDismiss: { tab.execution.errorMessage = nil }
+                onDismiss: { tabManager.mutate(tabId: tab.id) { $0.execution.errorMessage = nil } }
             )
             Divider()
         }
