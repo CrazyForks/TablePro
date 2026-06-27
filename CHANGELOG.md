@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The filter bar's autocomplete no longer pops up on empty space; it appears only while you are typing a word.
 - Pressing Escape to close the filter autocomplete no longer also closes the filter bar.
 - The SQL editor no longer leaks an Escape key handler each time you close a tab with the Find bar open.
+- SSH tunnels no longer pin a CPU core after the connection drops. A dropped tunnel is now detected and torn down instead of spinning in its relay loop. (#1769)
 
 ## [0.53.0] - 2026-06-25
 
