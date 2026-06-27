@@ -234,6 +234,7 @@ struct DataGridView: NSViewRepresentable {
         let oldColumnCount = coordinator.cachedColumnCount
         let structureChanged = oldRowCount != rowDisplayCount || oldColumnCount != columnCount
 
+        let liveColumnWidths = coordinator.currentColumnWidths()
         let schemaChanged = coordinator.rebuildColumnMetadataCache(from: latestRows)
         let needsFullReload = structureChanged || schemaChanged || contentChanged
         if contentChanged {
@@ -266,7 +267,7 @@ struct DataGridView: NSViewRepresentable {
 
         if !latestRows.columns.isEmpty {
             coordinator.isRebuildingColumns = true
-            let savedLayout = coordinator.resolvedColumnLayout(binding: columnLayout)
+            let savedLayout = coordinator.resolvedColumnLayout(binding: columnLayout, liveWidths: liveColumnWidths)
             reconcileColumnPool(
                 tableView: tableView,
                 coordinator: coordinator,

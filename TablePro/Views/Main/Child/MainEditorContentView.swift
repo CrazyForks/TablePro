@@ -423,15 +423,18 @@ struct MainEditorContentView: View {
 
     @ViewBuilder
     private func executionErrorBanner(tab: QueryTab) -> some View {
-        if let error = tab.execution.errorMessage,
-           tab.display.activeResultSet?.errorMessage == nil,
-           tab.display.resultSets.count <= 1 {
+        if let error = tab.display.activeResultSet?.errorMessage ?? tab.execution.errorMessage {
             InlineErrorBanner(
                 message: error,
-                onFixWithAI: AppSettingsManager.shared.ai.enabled
-                    ? { coordinator.fixErrorWithAI(error: error) }
+                onFixWithAI: AppSettingsManager.shared.ai.enabled && tab.tabType == .query
+                    ? { coordinator.fixErrorWithAI(query: tab.content.query, error: error) }
                     : nil,
-                onDismiss: { tabManager.mutate(tabId: tab.id) { $0.execution.errorMessage = nil } }
+                onDismiss: {
+                    tabManager.mutate(tabId: tab.id) {
+                        $0.display.activeResultSet?.errorMessage = nil
+                        $0.execution.errorMessage = nil
+                    }
+                }
             )
             Divider()
         }
@@ -466,14 +469,6 @@ struct MainEditorContentView: View {
                 } else {
                     if tab.display.resultSets.count > 1 {
                         resultTabBar(tab: tab)
-                        Divider()
-                    }
-
-                    if let error = tab.display.activeResultSet?.errorMessage {
-                        InlineErrorBanner(
-                            message: error,
-                            onDismiss: { tab.display.activeResultSet?.errorMessage = nil }
-                        )
                         Divider()
                     }
 

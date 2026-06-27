@@ -483,7 +483,6 @@ extension QueryExecutionCoordinator {
         connection conn: DatabaseConnection
     ) {
         parent.currentQueryTask = nil
-        parent.lastQueryErrorSQL = sql
         parent.tabManager.mutate(tabId: tabId) { tab in
             tab.execution.errorMessage = error.localizedDescription
             tab.execution.isExecuting = false

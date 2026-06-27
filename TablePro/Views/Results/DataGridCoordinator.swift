@@ -98,14 +98,13 @@ final class TableViewCoordinator: NSObject, NSTableViewDelegate, NSTableViewData
         return binding
     }
 
-    func resolvedColumnLayout(binding: ColumnLayoutState) -> ColumnLayoutState? {
+    func resolvedColumnLayout(binding: ColumnLayoutState, liveWidths: [String: CGFloat]) -> ColumnLayoutState? {
         let saved = savedColumnLayout(binding: binding)
-        let liveWidths = currentColumnWidths()
         guard !liveWidths.isEmpty else { return saved }
         return (saved ?? ColumnLayoutState()).mergingWidths(liveWidths)
     }
 
-    private func currentColumnWidths() -> [String: CGFloat] {
+    func currentColumnWidths() -> [String: CGFloat] {
         guard let tableView else { return [:] }
         var widths: [String: CGFloat] = [:]
         for column in tableView.tableColumns
