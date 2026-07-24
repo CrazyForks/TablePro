@@ -7,27 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.60.0] - 2026-07-24
+
 ### Added
 
-- Connect to PGlite through its socket server (`pglite-server`), with schema browsing, SQL editing, and row editing like PostgreSQL. Defaults to a loopback host with no TLS, and treats the connection as single-use to match PGlite's one-connection limit. (#1911)
-- In the CSV editor, right-click a column header to rename, insert, delete, or change the type of that column. (#1913)
-- In the CSV editor, insert a row above or below any row from the row's right-click menu or the Edit menu. Deleting rows that contain data now asks you to confirm first. (#1469)
-- In the CSV editor, insert a column to the left or right, and delete several selected columns at once. Column verbs also appear in the Edit menu, and deleting a column that holds data asks you to confirm first. (#1469)
-- In the CSV editor, split a column into several by a delimiter or regular expression, and merge a column with the one next to it using a separator. Both are single undo steps. (#1469)
-- In the CSV editor, switch the first row between header and data with `Cmd+Shift+H` when auto-detection guesses wrong. Files without a header are no longer saved with a generated header row. (#1469)
-- In the CSV editor, set the delimiter, quote character, encoding, and line ending by hand from Edit > Set CSV Properties…, then Reload to re-read the file with those settings. (#1469)
-- In the CSV editor, choose the escape character (a doubled quote or a backslash) in Set CSV Properties…, so files that escape quotes with a backslash read and save correctly. (#1469)
-- Add llama.cpp and MLX as local AI providers. Each preset points at the server's default local endpoint and needs no API key, alongside the existing Ollama and custom OpenAI-compatible options. (#1777)
-- SQL Server Windows Authentication (Kerberos) now connects to servers whose Kerberos realm differs from your Mac's default realm. TablePro reads the `[domain_realm]` mapping from your Kerberos configuration, the same way the JDBC driver does, so a server that works in DataGrip works here without changing your system `default_realm`. Hosts with no mapping keep using the default realm. (#1947)
+- Connect to PGlite through its socket server (`pglite-server`), with schema browsing, SQL editing, and row editing like PostgreSQL. (#1911)
+- In the CSV editor, edit structure from the column-header and row right-click menus and the Edit menu: rename, insert, delete, or change the type of columns; insert or delete rows; split a column by a delimiter or regex and merge adjacent columns, each a single undo step. Deleting columns or rows that hold data asks you to confirm first. (#1469, #1913)
+- In the CSV editor, set the delimiter, quote character, escape character, encoding, and line ending from Edit > Set CSV Properties…, then Reload to re-read the file. Switch the first row between header and data with `Cmd+Shift+H`, and files without a header no longer save with a generated header row. (#1469)
+- Add llama.cpp and MLX as local AI providers, each pointing at the server's default local endpoint with no API key. (#1777)
+- SQL Server Windows Authentication (Kerberos) now connects to servers whose Kerberos realm differs from your Mac's default realm, read from the `[domain_realm]` mapping in your Kerberos configuration. (#1947)
 
 ### Fixed
 
-- The object list no longer blanks out and shows a spinner while a schema change refreshes it. The tables, views, and functions you were looking at stay on screen until the new list arrives, and a spinner only appears for a first load or a refresh that runs long. (#1916)
-- Saving a change in the Structure tab no longer strips the counts from Columns, Indexes, and Foreign Keys and adds them back one at a time, so the picker stops shifting on every save. (#1916)
-- SSH tunnels using the None auth method now work on iPhone and iPad, not just the Mac. A connection synced from the Mac with None auth no longer fails to connect. (#1912)
-- Browsing a Trino table no longer fails with a syntax error. Trino requires `OFFSET` before `LIMIT`, so paging now uses `OFFSET` and `FETCH FIRST`. (#1936)
-- The Authentication method selector no longer changes position in the connection form when you switch between methods that show or hide the username and password (for example SQL Server's SQL vs Windows Authentication, or PostgreSQL's password vs AWS IAM). (#1947)
-- Switching schemas no longer makes the sidebar flash its loading spinner once per open tab. The table list now reloads once for the connection instead of once per window, which also cuts the metadata queries a schema switch sends. (#1946)
+- The object list no longer blanks out and shows a spinner while a schema change refreshes it. A spinner now only appears for a first load or a refresh that runs long. (#1916)
+- Saving a change in the Structure tab no longer strips and re-adds the Columns, Indexes, and Foreign Keys counts, so the picker stops shifting on every save. (#1916)
+- SSH tunnels using the None auth method now work on iPhone and iPad, including connections synced from the Mac. (#1912)
+- Browsing a Trino table no longer fails with a syntax error. (#1936)
+- The Authentication method selector no longer shifts position in the connection form when you switch between methods that show or hide the username and password. (#1947)
+- Switching schemas no longer flashes the sidebar loading spinner once per open tab. The table list now reloads once per connection instead of once per window. (#1946)
 
 ## [0.59.0] - 2026-07-21
 
@@ -2613,7 +2610,8 @@ TablePro is a native macOS database client built with SwiftUI and AppKit, design
     - Custom SQL query templates
     - Performance optimized for large datasets
 
-[Unreleased]: https://github.com/TableProApp/TablePro/compare/v0.59.0...HEAD
+[Unreleased]: https://github.com/TableProApp/TablePro/compare/v0.60.0...HEAD
+[0.60.0]: https://github.com/TableProApp/TablePro/compare/v0.59.0...v0.60.0
 [0.59.0]: https://github.com/TableProApp/TablePro/compare/v0.58.0...v0.59.0
 [0.58.0]: https://github.com/TableProApp/TablePro/compare/v0.57.1...v0.58.0
 [0.57.1]: https://github.com/TableProApp/TablePro/compare/v0.57.0...v0.57.1

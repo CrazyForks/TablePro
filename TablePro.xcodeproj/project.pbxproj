@@ -97,9 +97,6 @@
 		5E1A500100000000000000A9 /* TableProPluginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A860000100000000 /* TableProPluginKit.framework */; };
 		66671E37CDACCE1B9B0D9400 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97DB8F422F8F77B13A41B15F /* Cocoa.framework */; };
 		675C428FECC26FF3E0AF42DA /* TableProTeradataCore in Frameworks */ = {isa = PBXBuildFile; productRef = F2FDCCDDA7AC8E6AE30DAD35 /* TableProTeradataCore */; };
-		AC1D0000000000000000F003 /* TableProTrinoCore in Frameworks */ = {isa = PBXBuildFile; productRef = AC1D0000000000000000F002 /* TableProTrinoCore */; };
-		AC1D0000000000000000F004 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97DB8F422F8F77B13A41B15F /* Cocoa.framework */; };
-		AC1D0000000000000000F005 /* TableProPluginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A860000100000000 /* TableProPluginKit.framework */; };
 		690F1972044539AA3EC01FAD /* SnowflakePluginDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CAC14AE00C256911D2A9D2E /* SnowflakePluginDriver.swift */; };
 		69F80E23278BD01CA254E291 /* SnowflakeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1C881DFE85C2D2DBCC5B87 /* SnowflakeError.swift */; };
 		703C8C18A7F43E262695F557 /* SnowflakePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73CFCC6EA4288F34EBED5F37 /* SnowflakePlugin.swift */; };
@@ -108,6 +105,9 @@
 		8163B172478A511171523320 /* SnowflakeTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37458E42D8D6876BD9FDC7BD /* SnowflakeTypeMapper.swift */; };
 		8F6387B85F8B4AEE8210A6F1 /* SnowflakeIdTokenStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D67B38E07DF4F42A9C86639 /* SnowflakeIdTokenStore.swift */; };
 		952FCF406F3DE2575166802B /* SnowflakeBrowserAuthServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0809C2747F432C1F1C5A60 /* SnowflakeBrowserAuthServer.swift */; };
+		AC1D0000000000000000F003 /* TableProTrinoCore in Frameworks */ = {isa = PBXBuildFile; productRef = AC1D0000000000000000F002 /* TableProTrinoCore */; };
+		AC1D0000000000000000F004 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97DB8F422F8F77B13A41B15F /* Cocoa.framework */; };
+		AC1D0000000000000000F005 /* TableProPluginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A860000100000000 /* TableProPluginKit.framework */; };
 		B014CCF0DCB575301513A62D /* SnowflakeConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C938D4946679DB526884C9 /* SnowflakeConnection.swift */; };
 		E035AC6C854B14A8D56EDD2F /* TableProPluginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A860000100000000 /* TableProPluginKit.framework */; };
 		EE6F98F0581A8B96C6FE45E9 /* SnowflakeMFATokenStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CF18A0ED0B637448A808A4 /* SnowflakeMFATokenStore.swift */; };
@@ -430,7 +430,7 @@
 		95E00BB6B3C84C9583510E67 /* SnowflakeHeartbeat.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SnowflakeHeartbeat.swift; sourceTree = "<group>"; };
 		97DB8F422F8F77B13A41B15F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		A20DCD2775C0BFCD60A79A91 /* TeradataDriver.bundle */ = {isa = PBXFileReference; explicitFileType = "wrapper.plug-in"; includeInIndex = 0; name = TeradataDriver.bundle; path = TeradataDriver.tableplugin; sourceTree = BUILT_PRODUCTS_DIR; };
-		AC1D0000000000000000F001 /* TrinoDriverPlugin.tableplugin */ = {isa = PBXFileReference; explicitFileType = "wrapper.plug-in"; includeInIndex = 0; name = TrinoDriverPlugin.tableplugin; path = TrinoDriverPlugin.tableplugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC1D0000000000000000F001 /* TrinoDriverPlugin.tableplugin */ = {isa = PBXFileReference; explicitFileType = "wrapper.plug-in"; includeInIndex = 0; path = TrinoDriverPlugin.tableplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		C146F286FAB945E9B19E5B88 /* SnowflakeBindingEncoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SnowflakeBindingEncoder.swift; sourceTree = "<group>"; };
 		DE8D74A27EE24B89A7DC79F9 /* SnowflakeConnectionRegistry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SnowflakeConnectionRegistry.swift; sourceTree = "<group>"; };
 		F9D129A56E1AB45F7D82AC58 /* SnowflakeAuth.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SnowflakeAuth.swift; sourceTree = "<group>"; };
@@ -678,19 +678,19 @@
 			);
 			target = 5A1091C62EF17EDC0055EA7C /* TablePro */;
 		};
-		AC1D0000000000000000F00A /* Exceptions for "Plugins/TrinoDriverPlugin" folder in "TrinoDriverPlugin" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = AC1D0000000000000000F00B /* TrinoDriverPlugin */;
-		};
 		A14460BE78075C507C6E5BDF /* Exceptions for "Plugins/TeradataDriverPlugin" folder in "TeradataDriver" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
 			target = A95F5AB41510A4EFAAA0F38C /* TeradataDriver */;
+		};
+		AC1D0000000000000000F00A /* Exceptions for "Plugins/TrinoDriverPlugin" folder in "TrinoDriverPlugin" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AC1D0000000000000000F00B /* TrinoDriverPlugin */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -915,14 +915,6 @@
 			path = TableProUITests;
 			sourceTree = "<group>";
 		};
-		AC1D0000000000000000F009 /* Plugins/TrinoDriverPlugin */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				AC1D0000000000000000F00A /* Exceptions for "Plugins/TrinoDriverPlugin" folder in "TrinoDriverPlugin" target */,
-			);
-			path = Plugins/TrinoDriverPlugin;
-			sourceTree = "<group>";
-		};
 		6976BFEA1FD6CE97AD30AA12 /* Plugins/TeradataDriverPlugin */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -931,19 +923,17 @@
 			path = Plugins/TeradataDriverPlugin;
 			sourceTree = "<group>";
 		};
+		AC1D0000000000000000F009 /* Plugins/TrinoDriverPlugin */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AC1D0000000000000000F00A /* Exceptions for "Plugins/TrinoDriverPlugin" folder in "TrinoDriverPlugin" target */,
+			);
+			path = Plugins/TrinoDriverPlugin;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		AC1D0000000000000000F007 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				AC1D0000000000000000F004 /* Cocoa.framework in Frameworks */,
-				AC1D0000000000000000F005 /* TableProPluginKit.framework in Frameworks */,
-				AC1D0000000000000000F003 /* TableProTrinoCore in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		3600DDF1A8FAAF26C193B519 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1211,6 +1201,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				5E1A500100000000000000A9 /* TableProPluginKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AC1D0000000000000000F007 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AC1D0000000000000000F004 /* Cocoa.framework in Frameworks */,
+				AC1D0000000000000000F005 /* TableProPluginKit.framework in Frameworks */,
+				AC1D0000000000000000F003 /* TableProTrinoCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2103,29 +2103,6 @@
 			productReference = 5A2A9AE22FF52C7D0082A7AC /* ElasticsearchDriverPlugin.tableplugin */;
 			productType = "com.apple.product-type.bundle";
 		};
-		AC1D0000000000000000F00B /* TrinoDriverPlugin */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = AC1D0000000000000000F00E /* Build configuration list for PBXNativeTarget "TrinoDriverPlugin" */;
-			buildPhases = (
-				AC1D0000000000000000F006 /* Sources */,
-				AC1D0000000000000000F007 /* Frameworks */,
-				AC1D0000000000000000F008 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				AC1D0000000000000000F009 /* Plugins/TrinoDriverPlugin */,
-			);
-			name = TrinoDriverPlugin;
-			packageProductDependencies = (
-				AC1D0000000000000000F002 /* TableProTrinoCore */,
-			);
-			productName = TrinoDriverPlugin;
-			productReference = AC1D0000000000000000F001 /* TrinoDriverPlugin.tableplugin */;
-			productType = "com.apple.product-type.bundle";
-		};
 		A95F5AB41510A4EFAAA0F38C /* TeradataDriver */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 21831B14D329AEDEF6E0FC05 /* Build configuration list for PBXNativeTarget "TeradataDriver" */;
@@ -2147,6 +2124,29 @@
 			);
 			productName = TeradataDriver;
 			productReference = A20DCD2775C0BFCD60A79A91 /* TeradataDriver.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
+		AC1D0000000000000000F00B /* TrinoDriverPlugin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AC1D0000000000000000F00E /* Build configuration list for PBXNativeTarget "TrinoDriverPlugin" */;
+			buildPhases = (
+				AC1D0000000000000000F006 /* Sources */,
+				AC1D0000000000000000F007 /* Frameworks */,
+				AC1D0000000000000000F008 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				AC1D0000000000000000F009 /* Plugins/TrinoDriverPlugin */,
+			);
+			name = TrinoDriverPlugin;
+			packageProductDependencies = (
+				AC1D0000000000000000F002 /* TableProTrinoCore */,
+			);
+			productName = TrinoDriverPlugin;
+			productReference = AC1D0000000000000000F001 /* TrinoDriverPlugin.tableplugin */;
 			productType = "com.apple.product-type.bundle";
 		};
 		FABFFD08BCD1EEE7219EAE75 /* SnowflakeDriverPlugin */ = {
@@ -2835,14 +2835,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AC1D0000000000000000F006 /* Sources */ = {
+		A71ED1E7D88AFCF2B8B4757E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A71ED1E7D88AFCF2B8B4757E /* Sources */ = {
+		AC1D0000000000000000F006 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3165,7 +3165,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 111;
+				CURRENT_PROJECT_VERSION = 112;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = D7HJ5TFYCU;
 				ENABLE_APP_SANDBOX = NO;
@@ -3197,7 +3197,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Libs/dylibs";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.59.0;
+				MARKETING_VERSION = 0.60.0;
 				OTHER_LDFLAGS = (
 					"-Wl,-w",
 					"-force_load",
@@ -3242,7 +3242,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = YES;
-				CURRENT_PROJECT_VERSION = 111;
+				CURRENT_PROJECT_VERSION = 112;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = D7HJ5TFYCU;
@@ -3275,7 +3275,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Libs/dylibs";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.59.0;
+				MARKETING_VERSION = 0.60.0;
 				OTHER_LDFLAGS = (
 					"-Wl,-w",
 					"-force_load",
@@ -3661,7 +3661,7 @@
 					"-lcrypto.3",
 					"-liconv",
 					"-framework",
-					"GSS",
+					GSS,
 					"-lcom_err",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.TablePro.MSSQLDriver;
@@ -3703,7 +3703,7 @@
 					"-lcrypto.3",
 					"-liconv",
 					"-framework",
-					"GSS",
+					GSS,
 					"-lcom_err",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.TablePro.MSSQLDriver;
@@ -5098,15 +5098,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		AC1D0000000000000000F00E /* Build configuration list for PBXNativeTarget "TrinoDriverPlugin" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				AC1D0000000000000000F00C /* Release */,
-				AC1D0000000000000000F00D /* Debug */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		21831B14D329AEDEF6E0FC05 /* Build configuration list for PBXNativeTarget "TeradataDriver" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -5418,6 +5409,15 @@
 			buildConfigurations = (
 				5E1A500700000000000000B1 /* Debug */,
 				5E1A500700000000000000B2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AC1D0000000000000000F00E /* Build configuration list for PBXNativeTarget "TrinoDriverPlugin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AC1D0000000000000000F00C /* Release */,
+				AC1D0000000000000000F00D /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
