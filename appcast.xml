@@ -3,6 +3,41 @@
     <channel>
         <title>TablePro</title>
         <item>
+            <title>0.60.1</title>
+            <pubDate>Sat, 25 Jul 2026 08:09:47 +0000</pubDate>
+            <sparkle:version>113</sparkle:version>
+            <sparkle:shortVersionString>0.60.1</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description><![CDATA[<h3>Added</h3>
+<ul>
+<li>AWS IAM connections have an **RDS Endpoint** field, for when the connection points at a port forward you run yourself and TablePro cannot tell which database is behind it. The MySQL and PostgreSQL profile fields now list the profiles found on disk, like MariaDB already did. (#1432)</li>
+</ul>
+<h3>Fixed</h3>
+<ul>
+<li>AWS IAM authentication now works through a tunnel. The token was signed for the local forward instead of the database endpoint, so RDS rejected every connection made over SSH, Cloudflare, Cloud SQL Auth Proxy, or SOCKS. A tunneled connection also no longer needs the region filled in by hand. (#1432)</li>
+</ul>
+]]></description>
+            <enclosure url="https://github.com/TableProApp/TablePro/releases/download/v0.60.1/TablePro-0.60.1-arm64.zip" length="20657327" type="application/octet-stream" sparkle:edSignature="2atAiuol4yJ/tKXO5MXAIBKSP4dMvEHI8ABQLsdlfthNya7orKoe7ftunpODNR82D3Y5Q0eyJrFZ1LF872kkAw=="/>
+        </item>
+        <item>
+            <title>0.60.1</title>
+            <pubDate>Sat, 25 Jul 2026 08:09:48 +0000</pubDate>
+            <sparkle:version>113</sparkle:version>
+            <sparkle:shortVersionString>0.60.1</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[<h3>Added</h3>
+<ul>
+<li>AWS IAM connections have an **RDS Endpoint** field, for when the connection points at a port forward you run yourself and TablePro cannot tell which database is behind it. The MySQL and PostgreSQL profile fields now list the profiles found on disk, like MariaDB already did. (#1432)</li>
+</ul>
+<h3>Fixed</h3>
+<ul>
+<li>AWS IAM authentication now works through a tunnel. The token was signed for the local forward instead of the database endpoint, so RDS rejected every connection made over SSH, Cloudflare, Cloud SQL Auth Proxy, or SOCKS. A tunneled connection also no longer needs the region filled in by hand. (#1432)</li>
+</ul>
+]]></description>
+            <enclosure url="https://github.com/TableProApp/TablePro/releases/download/v0.60.1/TablePro-0.60.1-x86_64.zip" length="21871172" type="application/octet-stream" sparkle:edSignature="rM20letf1DDToK5X1qyKdqlb6Q1o7VJeFvObHXN4l3fVq7rlf49qcX2wgJzzHeAd6n7qseVlDQDKF2yZN1HOAg=="/>
+        </item>
+        <item>
             <title>0.60.0</title>
             <pubDate>Fri, 24 Jul 2026 05:12:21 +0000</pubDate>
             <sparkle:version>112</sparkle:version>
