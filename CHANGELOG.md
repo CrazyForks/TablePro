@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.60.1] - 2026-07-25
+
 ### Added
 
 - AWS IAM connections have an **RDS Endpoint** field, for when the connection points at a port forward you run yourself and TablePro cannot tell which database is behind it. The MySQL and PostgreSQL profile fields now list the profiles found on disk, like MariaDB already did. (#1432)
@@ -2618,7 +2620,8 @@ TablePro is a native macOS database client built with SwiftUI and AppKit, design
     - Custom SQL query templates
     - Performance optimized for large datasets
 
-[Unreleased]: https://github.com/TableProApp/TablePro/compare/v0.60.0...HEAD
+[Unreleased]: https://github.com/TableProApp/TablePro/compare/v0.60.1...HEAD
+[0.60.1]: https://github.com/TableProApp/TablePro/compare/v0.60.0...v0.60.1
 [0.60.0]: https://github.com/TableProApp/TablePro/compare/v0.59.0...v0.60.0
 [0.59.0]: https://github.com/TableProApp/TablePro/compare/v0.58.0...v0.59.0
 [0.58.0]: https://github.com/TableProApp/TablePro/compare/v0.57.1...v0.58.0
