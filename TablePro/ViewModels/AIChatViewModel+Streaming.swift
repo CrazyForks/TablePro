@@ -95,7 +95,8 @@ extension AIChatViewModel {
                     promptContext: promptContext,
                     resolved: resolved,
                     assistantID: assistantID,
-                    settings: settings
+                    settings: settings,
+                    includeWalkthroughDirective: self.pendingWalkthroughBeforeSQL != nil
                 )
                 self.prepTask = nil
             }
@@ -107,13 +108,18 @@ extension AIChatViewModel {
         promptContext: PromptContext?,
         resolved: AIProviderFactory.ResolvedProvider,
         assistantID: UUID,
-        settings: AISettings
+        settings: AISettings,
+        includeWalkthroughDirective: Bool = false
     ) {
         let chatMode = settings.chatMode
         streamingTask = Task.detached(priority: .userInitiated) { [weak self] in
             var currentAssistantID = assistantID
             do {
-                let systemPrompt = Self.buildSystemPrompt(promptContext, mode: chatMode)
+                let systemPrompt = Self.buildSystemPrompt(
+                    promptContext,
+                    mode: chatMode,
+                    includeWalkthroughDirective: includeWalkthroughDirective
+                )
                 guard let self else { return }
                 let preflightOK = await self.preflightCheck(
                     systemPrompt: systemPrompt,
@@ -190,6 +196,7 @@ extension AIChatViewModel {
                 await MainActor.run { [weak self] in
                     guard let self else { return }
                     self.finalizeStreamingMessage(id: finalAssistantID)
+                    self.resolveWalkthroughIfNeeded(id: finalAssistantID)
                     self.streamingState = .idle
                     self.streamingTask = nil
                     self.persistCurrentConversation()
@@ -198,6 +205,7 @@ extension AIChatViewModel {
                 let failedAssistantID = currentAssistantID
                 await MainActor.run { [weak self] in
                     guard let self else { return }
+                    self.pendingWalkthroughBeforeSQL = nil
                     if !Task.isCancelled {
                         Self.logger.error("Streaming failed: \(error.localizedDescription)")
                         self.errorMessage = error.localizedDescription
@@ -221,6 +229,47 @@ extension AIChatViewModel {
     func finalizeStreamingMessage(id: UUID) {
         guard let idx = messages.firstIndex(where: { $0.id == id }) else { return }
         messages[idx].finishStreamingTextBlock()
+    }
+
+    @MainActor
+    func resolveWalkthroughIfNeeded(id: UUID) {
+        guard let beforeSQL = pendingWalkthroughBeforeSQL else { return }
+        pendingWalkthroughBeforeSQL = nil
+        guard let idx = messages.firstIndex(where: { $0.id == id }) else { return }
+
+        let textBlocks = messages[idx].blocks.filter { block in
+            if case .text = block.kind { return true }
+            return false
+        }
+        guard let openOffset = textBlocks.firstIndex(where: { block in
+            if case .text(let text) = block.kind {
+                return text.contains(WalkthroughEnvelopeParser.openFence)
+            }
+            return false
+        }) else { return }
+
+        // A provider can split the envelope across text blocks, so parse the joined tail
+        // rather than only the block that happens to carry the opening fence.
+        let tail = Array(textBlocks[openOffset...])
+        let joined = tail.compactMap { block -> String? in
+            if case .text(let text) = block.kind { return text }
+            return nil
+        }.joined()
+
+        guard case .text(let openText) = tail[0].kind else { return }
+        let prose = WalkthroughEnvelopeParser.stripFence(from: openText)
+        let consumedIDs = Set(tail.dropFirst().map(\.id))
+        messages[idx].blocks.removeAll { consumedIDs.contains($0.id) }
+
+        if prose.isEmpty {
+            messages[idx].blocks.removeAll { $0.id == tail[0].id }
+        } else {
+            tail[0].setKind(.text(prose))
+        }
+
+        guard let envelope = WalkthroughEnvelopeParser.parse(from: joined) else { return }
+        let walkthrough = SqlWalkthroughBlock(beforeSQL: beforeSQL, envelope: envelope)
+        messages[idx].appendBlock(.sqlWalkthrough(walkthrough))
     }
 
     private func consumeStreamRound(
@@ -356,7 +405,11 @@ extension AIChatViewModel {
         idMap = updated
     }
 
-    nonisolated static func buildSystemPrompt(_ promptContext: PromptContext?, mode: AIChatMode) -> String? {
+    nonisolated static func buildSystemPrompt(
+        _ promptContext: PromptContext?,
+        mode: AIChatMode,
+        includeWalkthroughDirective: Bool = false
+    ) -> String? {
         let schemaPrompt = promptContext.map {
             AISchemaContext.buildSystemPrompt(
                 databaseType: $0.databaseType,
@@ -374,8 +427,16 @@ extension AIChatViewModel {
             )
         }
         let modeNote = mode.systemPromptNote
-        guard let schemaPrompt, !schemaPrompt.isEmpty else { return modeNote }
-        return "\(schemaPrompt)\n\n\(modeNote)"
+        let base: String?
+        if let schemaPrompt, !schemaPrompt.isEmpty {
+            base = "\(schemaPrompt)\n\n\(modeNote)"
+        } else {
+            base = modeNote
+        }
+        guard includeWalkthroughDirective else { return base }
+        let directive = AIPromptTemplates.walkthroughSystemDirective
+        guard let base, !base.isEmpty else { return directive }
+        return "\(base)\n\n\(directive)"
     }
 
     private func failTooManyRoundtrips(assistantID: UUID) async {
