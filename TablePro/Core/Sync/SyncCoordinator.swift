@@ -10,6 +10,7 @@ import Combine
 import Foundation
 import Observation
 import os
+import TableProSyncTransport
 
 /// Central coordinator for iCloud sync
 @MainActor @Observable
@@ -25,7 +26,7 @@ final class SyncCoordinator {
     @ObservationIgnored private let engine = CloudKitSyncEngine()
     @ObservationIgnored private let changeTracker: SyncChangeTracker
     @ObservationIgnored private let metadataStorage: SyncMetadataStorage
-    @ObservationIgnored private let conflictResolver: ConflictResolver
+    @ObservationIgnored private let recordCache = SyncRecordCache()
     @ObservationIgnored private var accountObserver: NSObjectProtocol?
     @ObservationIgnored private var changeCancellable: AnyCancellable?
     @ObservationIgnored private var licenseCancellable: AnyCancellable?
@@ -36,7 +37,6 @@ final class SyncCoordinator {
         self.services = services
         self.changeTracker = services.syncTracker
         self.metadataStorage = services.syncMetadataStorage
-        self.conflictResolver = services.conflictResolver
         lastSyncDate = metadataStorage.lastSyncDate
     }
 
@@ -97,8 +97,21 @@ final class SyncCoordinator {
 
         do {
             try await engine.ensureZoneExists()
-            await performPush()
+
+            var pushError: Error?
+            do {
+                try await performPush()
+            } catch {
+                pushError = error
+                Self.logger.error("Push failed: \(error.localizedDescription)")
+            }
+
             await performPull()
+
+            if let pushError {
+                syncStatus = .error(SyncError.from(pushError))
+                return
+            }
 
             lastSyncDate = Date()
             metadataStorage.lastSyncDate = lastSyncDate
@@ -267,7 +280,7 @@ final class SyncCoordinator {
 
     // MARK: - Push
 
-    private func performPush() async {
+    private func performPush() async throws {
         let settings = services.appSettingsStorage.loadSync()
         var recordsToSave: [CKRecord] = []
         var recordIDsToDelete: [CKRecord.ID] = []
@@ -280,8 +293,13 @@ final class SyncCoordinator {
                 for id in dirtyConnectionIds {
                     if let connection = connections.first(where: { $0.id.uuidString == id }),
                        !connection.localOnly {
+                        let recordID = SyncRecordMapper.recordID(type: .connection, id: id, in: zoneID)
                         recordsToSave.append(
-                            SyncRecordMapper.toCKRecord(connection, in: zoneID)
+                            SyncRecordMapper.toCKRecord(
+                                connection,
+                                in: zoneID,
+                                base: recordCache.record(for: recordID)
+                            )
                         )
                     }
                 }
@@ -328,75 +346,30 @@ final class SyncCoordinator {
 
         guard !recordsToSave.isEmpty || !uniqueDeletions.isEmpty else { return }
 
-        do {
-            try await engine.push(records: recordsToSave, deletions: uniqueDeletions)
+        let outcome = try await engine.push(records: recordsToSave, deletions: uniqueDeletions)
 
-            if settings.syncConnections {
-                changeTracker.clearAllDirty(.connection)
-            }
-            if settings.syncGroupsAndTags {
-                changeTracker.clearAllDirty(.group)
-                changeTracker.clearAllDirty(.tag)
-            }
-            if settings.syncSSHProfiles {
-                changeTracker.clearAllDirty(.sshProfile)
-            }
-            if settings.syncSettings {
-                changeTracker.clearAllDirty(.settings)
-            }
-            if settings.syncTableFavorites {
-                changeTracker.clearAllDirty(.tableFavorite)
-            }
-            if settings.syncSQLFavorites {
-                changeTracker.clearAllDirty(.favorite)
-                changeTracker.clearAllDirty(.favoriteFolder)
-            }
+        recordCache.store(Array(outcome.savedRecords.values))
+        recordCache.remove(Array(outcome.deletedRecordIDs))
 
-            // Clear tombstones only for types that were actually pushed
-            if settings.syncConnections {
-                for tombstone in metadataStorage.tombstones(for: .connection) {
-                    metadataStorage.removeTombstone(type: .connection, id: tombstone.id)
-                }
-            }
-            if settings.syncGroupsAndTags {
-                for tombstone in metadataStorage.tombstones(for: .group) {
-                    metadataStorage.removeTombstone(type: .group, id: tombstone.id)
-                }
-                for tombstone in metadataStorage.tombstones(for: .tag) {
-                    metadataStorage.removeTombstone(type: .tag, id: tombstone.id)
-                }
-            }
-            if settings.syncSSHProfiles {
-                for tombstone in metadataStorage.tombstones(for: .sshProfile) {
-                    metadataStorage.removeTombstone(type: .sshProfile, id: tombstone.id)
-                }
-            }
-            if settings.syncSettings {
-                for tombstone in metadataStorage.tombstones(for: .settings) {
-                    metadataStorage.removeTombstone(type: .settings, id: tombstone.id)
-                }
-            }
-            if settings.syncTableFavorites {
-                for tombstone in metadataStorage.tombstones(for: .tableFavorite) {
-                    metadataStorage.removeTombstone(type: .tableFavorite, id: tombstone.id)
-                }
-            }
-            if settings.syncSQLFavorites {
-                for tombstone in metadataStorage.tombstones(for: .favorite) {
-                    metadataStorage.removeTombstone(type: .favorite, id: tombstone.id)
-                }
-                for tombstone in metadataStorage.tombstones(for: .favoriteFolder) {
-                    metadataStorage.removeTombstone(type: .favoriteFolder, id: tombstone.id)
-                }
-            }
-
-            Self.logger.info("Push completed: \(recordsToSave.count) saved, \(recordIDsToDelete.count) deleted")
-        } catch let error as CKError where error.code == .serverRecordChanged {
-            Self.logger.warning("Server record changed during push — conflicts detected")
-            handlePushConflicts(error)
-        } catch {
-            Self.logger.error("Push failed: \(error.localizedDescription)")
+        for recordID in outcome.savedRecords.keys {
+            guard let parsed = SyncRecordMapper.parse(recordName: recordID.recordName) else { continue }
+            changeTracker.clearDirty(parsed.type, id: parsed.id)
         }
+
+        for recordID in outcome.deletedRecordIDs {
+            guard let parsed = SyncRecordMapper.parse(recordName: recordID.recordName) else { continue }
+            metadataStorage.removeTombstone(type: parsed.type, id: parsed.id)
+        }
+
+        Self.logger.info(
+            "Push completed: \(outcome.savedRecords.count) saved, "
+                + "\(outcome.deletedRecordIDs.count) deleted, \(outcome.failures.count) rejected"
+        )
+
+        guard outcome.hasFailures else { return }
+
+        guard let firstFailure = outcome.failures.values.first else { return }
+        throw SyncError.pushRejected(count: outcome.failures.count, detail: firstFailure.message)
     }
 
     // MARK: - Pull
@@ -429,6 +402,9 @@ final class SyncCoordinator {
         }
 
         applyRemoteChanges(result)
+
+        recordCache.store(result.changedRecords)
+        recordCache.remove(result.deletedRecordIDs)
 
         Self.logger.info(
             "Pull completed: \(result.changedRecords.count) changed, \(result.deletedRecordIDs.count) deleted"
@@ -595,6 +571,25 @@ final class SyncCoordinator {
     }
 
     @discardableResult
+    private func mergeLocalEdits(into remoteRecord: CKRecord, localConnection: DatabaseConnection) -> DatabaseConnection? {
+        guard let base = recordCache.record(for: remoteRecord.recordID) else { return nil }
+
+        let localRecord = SyncRecordMapper.toCKRecord(localConnection, in: remoteRecord.recordID.zoneID)
+        guard let merged = remoteRecord.copy() as? CKRecord else { return nil }
+
+        for field in ConnectionSyncField.allCases where field != .modifiedAtLocal {
+            guard !CKRecord.isEqualRecordValue(localRecord[field], base[field]) else { continue }
+            merged[field] = localRecord[field]
+        }
+
+        do {
+            return try SyncRecordMapper.toConnection(merged)
+        } catch {
+            Self.logger.error("Failed to merge local edits: \(error.localizedDescription)")
+            return nil
+        }
+    }
+
     private func applyRemoteConnection(_ record: CKRecord, tombstoneIds: Set<String>) -> Bool {
         let remoteConnection: DatabaseConnection
         do {
@@ -610,26 +605,17 @@ final class SyncCoordinator {
 
         var connections = services.connectionStorage.loadConnections()
         if let index = connections.firstIndex(where: { $0.id == remoteConnection.id }) {
+            var incoming = remoteConnection
             if changeTracker.dirtyRecords(for: .connection).contains(remoteConnection.id.uuidString) {
-                let localRecord = SyncRecordMapper.toCKRecord(
-                    connections[index],
-                    in: CKRecordZone.ID(
-                        zoneName: "TableProSync",
-                        ownerName: CKCurrentUserDefaultName
-                    )
-                )
-                let conflict = SyncConflict(
-                    recordType: .connection,
-                    entityName: remoteConnection.name,
-                    localRecord: localRecord,
-                    serverRecord: record,
-                    localModifiedAt: (localRecord["modifiedAtLocal"] as? Date) ?? Date(),
-                    serverModifiedAt: (record["modifiedAtLocal"] as? Date) ?? Date()
-                )
-                conflictResolver.addConflict(conflict)
-                return false
+                guard let reconciled = mergeLocalEdits(
+                    into: record,
+                    localConnection: connections[index]
+                ) else {
+                    return false
+                }
+                incoming = reconciled
             }
-            var merged = remoteConnection
+            var merged = incoming
             merged.localOnly = connections[index].localOnly
             merged.passwordSource = connections[index].passwordSource
             connections[index] = merged
@@ -802,53 +788,6 @@ final class SyncCoordinator {
     }
 
     // MARK: - Conflict Handling
-
-    private func handlePushConflicts(_ error: CKError) {
-        guard let partialErrors = error.partialErrorsByItemID else { return }
-
-        for (_, itemError) in partialErrors {
-            guard let ckError = itemError as? CKError,
-                  ckError.code == .serverRecordChanged,
-                  let serverRecord = ckError.serverRecord,
-                  let clientRecord = ckError.clientRecord
-            else { continue }
-
-            let recordType = serverRecord.recordType
-            let entityName = (serverRecord["name"] as? String) ?? recordType
-
-            let syncRecordType: SyncRecordType
-            switch recordType {
-            case SyncRecordType.connection.rawValue: syncRecordType = .connection
-            case SyncRecordType.group.rawValue: syncRecordType = .group
-            case SyncRecordType.tag.rawValue: syncRecordType = .tag
-            case SyncRecordType.settings.rawValue: syncRecordType = .settings
-            case SyncRecordType.sshProfile.rawValue: syncRecordType = .sshProfile
-            case SyncRecordType.tableFavorite.rawValue: syncRecordType = .tableFavorite
-            default: continue
-            }
-
-            let conflict = SyncConflict(
-                recordType: syncRecordType,
-                entityName: entityName,
-                localRecord: clientRecord,
-                serverRecord: serverRecord,
-                localModifiedAt: (clientRecord["modifiedAtLocal"] as? Date) ?? Date(),
-                serverModifiedAt: (serverRecord["modifiedAtLocal"] as? Date) ?? Date()
-            )
-            conflictResolver.addConflict(conflict)
-        }
-    }
-
-    /// Push a resolved conflict record back to CloudKit
-    func pushResolvedConflict(_ record: CKRecord) {
-        Task {
-            do {
-                try await engine.push(records: [record], deletions: [])
-            } catch {
-                Self.logger.error("Failed to push resolved conflict: \(error.localizedDescription)")
-            }
-        }
-    }
 
     // MARK: - Settings Helpers
 
