@@ -112,7 +112,7 @@ actor CloudKitSyncEngine {
 
     private func pushBatch(records: [CKRecord], deletions: [CKRecord.ID]) async throws -> PushOutcome {
         guard let database else { throw SyncError.accountUnavailable }
-        try await withRetry {
+        return try await withRetry {
             let operation = CKModifyRecordsOperation(
                 recordsToSave: records,
                 recordIDsToDelete: deletions
