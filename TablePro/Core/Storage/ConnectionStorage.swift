@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import TableProSyncTransport
 import os
 import TableProPluginKit
+import TableProSyncTransport
 
 /// Service for persisting database connections
 @MainActor

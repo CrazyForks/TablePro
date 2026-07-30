@@ -5,8 +5,8 @@
 
 import Foundation
 import Observation
-import TableProSyncTransport
 import os
+import TableProSyncTransport
 
 enum CustomSlashCommandError: LocalizedError, Equatable {
     case duplicateName(String)

@@ -5,10 +5,10 @@
 
 import AppKit
 import Combine
-import TableProSyncTransport
 import os
 import SwiftUI
 import TableProPluginKit
+import TableProSyncTransport
 
 @MainActor
 final class WeakCoordinatorRef {

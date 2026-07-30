@@ -1,6 +1,6 @@
 import Foundation
-import TableProSyncTransport
 import os
+import TableProSyncTransport
 
 extension Notification.Name {
     static let favoriteTablesDidChange = Notification.Name("FavoriteTablesDidChange")

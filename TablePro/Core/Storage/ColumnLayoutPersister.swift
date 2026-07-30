@@ -4,8 +4,8 @@
 //
 
 import Foundation
-import TableProSyncTransport
 import os
+import TableProSyncTransport
 
 @MainActor
 final class FileColumnLayoutPersister: ColumnLayoutPersisting {

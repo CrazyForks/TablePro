@@ -4,8 +4,8 @@
 //
 
 import Foundation
-import TableProSyncTransport
 import os
+import TableProSyncTransport
 
 final class SSHProfileStorage {
     static let shared = SSHProfileStorage()

@@ -4,8 +4,8 @@
 //
 
 import Foundation
-import TableProSyncTransport
 import os
+import TableProSyncTransport
 
 /// Service for persisting connection groups
 @MainActor

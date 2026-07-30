@@ -5,8 +5,8 @@
 
 import Combine
 import Foundation
-import TableProSyncTransport
 import os
+import TableProSyncTransport
 
 /// Manages SQL favorites with notifications
 internal final class SQLFavoriteManager: @unchecked Sendable {
