@@ -1008,7 +1008,7 @@ struct MultiRowEditStateTests {
         }
     }
 
-    @Suite("Schema fields")
+    @MainActor @Suite("Schema fields")
     struct SchemaFields {
         private func schemaFields() -> [InspectorRowField] {
             [
@@ -1027,7 +1027,7 @@ struct MultiRowEditStateTests {
             #expect(sut.fields.map(\.columnName) == ["Name", "Type", "Nullable"])
             #expect(sut.fields.map(\.originalValue) == ["email", "VARCHAR(255)", "YES"])
             #expect(sut.fields[1].editor == .typePicker)
-            #expect(sut.fields.allSatisfy(\.isSchemaField))
+            #expect(sut.fields.allSatisfy { $0.isSchemaField })
             #expect(sut.fields[2].hasCommittedEdit)
             #expect(sut.fields[0].hasCommittedEdit == false)
             #expect(sut.selectedRowIndices == [2])

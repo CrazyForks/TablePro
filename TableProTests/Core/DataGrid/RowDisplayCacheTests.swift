@@ -119,15 +119,17 @@ struct RowDisplayCacheTests {
     }
 
     @Test("Clearing one row leaves the others formatted")
-    func clearValuesLeavesOtherRows() {
+    func clearValuesLeavesOtherRows() throws {
         let cache = RowDisplayCache()
         cache.setBox(makeBox(["a"]), forID: .existing(0), cost: 1)
         cache.setBox(makeBox(["b"]), forID: .existing(1), cost: 1)
 
         cache.clearValues(forID: .existing(1))
 
-        #expect(cache.box(forID: .existing(0))?.values.first == "a")
-        #expect(cache.box(forID: .existing(1))?.values.first == nil)
+        let kept = try #require(cache.box(forID: .existing(0)))
+        #expect(kept.values[0] == "a")
+        let cleared = try #require(cache.box(forID: .existing(1)))
+        #expect(cleared.values[0] == nil)
     }
 
     @Test("Clearing an uncached row does nothing")
