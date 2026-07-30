@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.61.0] - 2026-07-30
+
 ### Added
 
 - **Close All Tabs**, **Close Other Tabs**, and **Close Tabs for Other Databases** in the File menu, bindable in **Settings > Keyboard**. (#1972)
@@ -2669,7 +2671,8 @@ TablePro is a native macOS database client built with SwiftUI and AppKit, design
     - Custom SQL query templates
     - Performance optimized for large datasets
 
-[Unreleased]: https://github.com/TableProApp/TablePro/compare/v0.60.1...HEAD
+[Unreleased]: https://github.com/TableProApp/TablePro/compare/v0.61.0...HEAD
+[0.61.0]: https://github.com/TableProApp/TablePro/compare/v0.60.1...v0.61.0
 [0.60.1]: https://github.com/TableProApp/TablePro/compare/v0.60.0...v0.60.1
 [0.60.0]: https://github.com/TableProApp/TablePro/compare/v0.59.0...v0.60.0
 [0.59.0]: https://github.com/TableProApp/TablePro/compare/v0.58.0...v0.59.0
