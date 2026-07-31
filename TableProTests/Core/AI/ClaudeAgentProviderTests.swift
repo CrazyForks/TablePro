@@ -201,11 +201,9 @@ struct AgentCLIDiscoveryTests {
 struct ClaudeAgentMCPBridgeTests {
     @Test("The MCP config carries the bearer token and TablePro's server name")
     func configCarriesScopedToken() throws {
+        let endpoint = try #require(URL(string: "http://127.0.0.1:23508/mcp"))
         let payload = try #require(
-            ClaudeAgentMCPBridge.configPayload(
-                endpoint: try #require(URL(string: "http://127.0.0.1:23508/mcp")),
-                token: "tp_secret"
-            )
+            ClaudeAgentMCPBridge.configPayload(endpoint: endpoint, token: "tp_secret")
         )
         let json = try JSONSerialization.jsonObject(with: try #require(payload.data(using: .utf8)))
         let servers = try #require((json as? [String: Any])?["mcpServers"] as? [String: Any])
