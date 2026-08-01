@@ -5,6 +5,7 @@
 
 import AppKit
 import SwiftUI
+import TableProPluginKit
 
 extension TableViewCoordinator {
     // MARK: - Cell Interaction
