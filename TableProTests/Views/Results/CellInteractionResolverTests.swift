@@ -188,7 +188,7 @@ struct CellInteractionResolverBinaryTests {
     @Test("a binary cell in a text column opens the blob editor")
     func binaryCellInTextColumnEdits() {
         let context = ContextFactory.make(
-            value: nil, columnType: .text("RedisRaw"), isTableEditable: true, isBinaryValue: true
+            value: nil, columnType: .text(rawType: "RedisRaw"), isTableEditable: true, isBinaryValue: true
         )
         #expect(resolver.resolve(context) == .editBlob)
     }
@@ -196,7 +196,7 @@ struct CellInteractionResolverBinaryTests {
     @Test("a binary cell in a read-only table opens the blob viewer")
     func binaryCellReadOnlyViews() {
         let context = ContextFactory.make(
-            value: nil, columnType: .text("RedisRaw"), isTableEditable: false, isBinaryValue: true
+            value: nil, columnType: .text(rawType: "RedisRaw"), isTableEditable: false, isBinaryValue: true
         )
         #expect(resolver.resolve(context) == .viewBlob)
     }
@@ -204,7 +204,7 @@ struct CellInteractionResolverBinaryTests {
     @Test("a binary cell in an immutable column is not editable")
     func binaryCellImmutableColumnViews() {
         let context = ContextFactory.make(
-            value: nil, columnType: .text("RedisRaw"), isTableEditable: true,
+            value: nil, columnType: .text(rawType: "RedisRaw"), isTableEditable: true,
             isImmutableColumn: true, isBinaryValue: true
         )
         #expect(resolver.resolve(context) == .viewBlob)
@@ -213,7 +213,7 @@ struct CellInteractionResolverBinaryTests {
     @Test("a text cell in the same column still edits inline")
     func textCellInSameColumnEditsInline() {
         let context = ContextFactory.make(
-            value: "hello", columnType: .text("RedisRaw"), isTableEditable: true
+            value: "hello", columnType: .text(rawType: "RedisRaw"), isTableEditable: true
         )
         #expect(resolver.resolve(context) == .editInline(value: "hello"))
     }

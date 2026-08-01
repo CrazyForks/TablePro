@@ -371,7 +371,7 @@ final class MongoDBConnection: @unchecked Sendable {
         stateLock.lock()
         _isCancelled = true
         #if canImport(CLibMongoc)
-        let lsid = _activeSessionLsid.map { bson_copy($0) }
+        let lsid: OpaquePointer? = _activeSessionLsid.flatMap { bson_copy($0) }
         #endif
         stateLock.unlock()
 
