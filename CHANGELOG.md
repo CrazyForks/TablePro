@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.62.0] - 2026-08-02
+
 ### Added
 
 - **Claude Agent** provider, which runs AI chat through the Claude Code command line tool so you can use a Claude subscription instead of a metered API key. It answers from your schema when the MCP server is on.
@@ -2701,7 +2703,8 @@ TablePro is a native macOS database client built with SwiftUI and AppKit, design
     - Custom SQL query templates
     - Performance optimized for large datasets
 
-[Unreleased]: https://github.com/TableProApp/TablePro/compare/v0.61.0...HEAD
+[Unreleased]: https://github.com/TableProApp/TablePro/compare/v0.62.0...HEAD
+[0.62.0]: https://github.com/TableProApp/TablePro/compare/v0.61.0...v0.62.0
 [0.61.0]: https://github.com/TableProApp/TablePro/compare/v0.60.1...v0.61.0
 [0.60.1]: https://github.com/TableProApp/TablePro/compare/v0.60.0...v0.60.1
 [0.60.0]: https://github.com/TableProApp/TablePro/compare/v0.59.0...v0.60.0
