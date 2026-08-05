@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.63.0] - 2026-08-05
+
 ### Added
 
 - Turkish, Vietnamese, Simplified Chinese, and Traditional Chinese translations for the strings that still showed in English.
@@ -2729,7 +2731,8 @@ TablePro is a native macOS database client built with SwiftUI and AppKit, design
     - Custom SQL query templates
     - Performance optimized for large datasets
 
-[Unreleased]: https://github.com/TableProApp/TablePro/compare/v0.62.0...HEAD
+[Unreleased]: https://github.com/TableProApp/TablePro/compare/v0.63.0...HEAD
+[0.63.0]: https://github.com/TableProApp/TablePro/compare/v0.62.0...v0.63.0
 [0.62.0]: https://github.com/TableProApp/TablePro/compare/v0.61.0...v0.62.0
 [0.61.0]: https://github.com/TableProApp/TablePro/compare/v0.60.1...v0.61.0
 [0.60.1]: https://github.com/TableProApp/TablePro/compare/v0.60.0...v0.60.1
