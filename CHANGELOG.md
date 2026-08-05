@@ -9,9 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Refreshing a table no longer fails with "Query cancelled" on every second click. The refresh was sending the database a cancel for a row count that had already finished, and that cancel then aborted the reload it had just started. Covers PostgreSQL, Redshift, CockroachDB, MySQL, MariaDB, and Redis. (#2021)
-- Stopping a query no longer shows it as a failed query with a red error message. A query you stopped is no longer recorded as a failure in query history either.
-- Stopping a MySQL or MariaDB write, or a Redis command, no longer cancels the next statement you run on that connection.
+- Refreshing a table no longer fails with "Query cancelled" on every second click. (#2021)
+- Stopping a query no longer shows a red error or records the query as failed in history.
+- Stopping a MySQL, MariaDB, or Redis query no longer cancels the next one you run.
 
 ## [0.63.0] - 2026-08-05
 
