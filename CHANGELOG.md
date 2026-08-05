@@ -7,19 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Fixed
-
-- `Cmd+Delete` in the SQL editor deletes to the start of the line again. (#2022)
-- `Option+Delete` in the SQL editor deletes the previous word again. (#2022)
-- Refreshing a table no longer fails with "Query cancelled" on every second click. (#2021)
-- Stopping a query no longer shows a red error or records the query as failed in history.
-- Stopping a MySQL, MariaDB, or Redis query no longer cancels the next one you run.
-- SQL export no longer writes generated columns into the INSERT statements, so the dump imports cleanly. Covers MySQL, MariaDB, and ClickHouse. (#2023)
-- Adding or duplicating a row on a table with a generated column now saves. (#2023)
-- Generated columns are now read-only in the data grid. (#2023)
-
-## [0.63.0] - 2026-08-05
-
 ### Added
 
 - Turkish, Vietnamese, Simplified Chinese, and Traditional Chinese translations for the strings that still showed in English.
@@ -30,6 +17,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `Cmd+Delete` in the SQL editor deletes to the start of the line again. (#2022)
+- `Option+Delete` in the SQL editor deletes the previous word again. (#2022)
+- Refreshing a table no longer fails with "Query cancelled" on every second click. (#2021)
+- Stopping a query no longer shows a red error or records the query as failed in history.
+- Stopping a MySQL, MariaDB, or Redis query no longer cancels the next one you run.
+- SQL export no longer writes generated columns into the INSERT statements, so the dump imports cleanly. Covers MySQL, MariaDB, and ClickHouse. (#2023)
+- Adding or duplicating a row on a table with a generated column now saves. (#2023)
+- Generated columns are now read-only in the data grid. (#2023)
 - The data grid header's bottom line no longer cuts through a column comment. It sits on the header's bottom edge. (#2017)
 - A sorted column's header no longer draws an extra line and a divider that no other column has. (#2017)
 - Selecting a column highlights the full height of its header instead of a band across the middle. (#2017)
