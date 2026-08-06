@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Redshift external schemas now list their tables. Spectrum, federated query, cross-database, and datashare schemas showed up empty because their tables are not in the standard catalog.
+- External schemas are marked in the sidebar, and their tables show an external icon. External tables open read-only, because Redshift rejects `UPDATE` and `DELETE` on them.
+
 ### Fixed
 
 - An open tab now keeps running against the database it was opened on, so changing the database in the sidebar no longer breaks it with a "table doesn't exist" error. (#2026)
