@@ -9,12 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Oracle connections can now sign in as SYSDBA or SYSOPER, on both Mac and mobile. Administrative logons previously had no way to connect. (#2039)
+- Oracle now works in TablePro Mobile: connect, browse schemas and tables, run queries, and edit rows, with a Service Name or SID picker and the same SSL modes as the Mac app. (#2033)
+- When an Oracle listener rejects the connect identifier, the connection form now names which one was wrong and offers to switch between Service Name and SID in one tap. (#2033)
 - Sidebar object icons can be turned off for a plain list of names. Right-click anywhere in the sidebar and use View Options, or toggle Show Object Icons from the View menu or Settings > General. Tables staged for truncate or delete keep their marker.
 - Redshift external schemas now list their tables. Spectrum, federated query, cross-database, and datashare schemas showed up empty because their tables are not in the standard catalog.
 - External schemas are marked in the sidebar, and their tables show an external icon. External tables open read-only, because Redshift rejects `UPDATE` and `DELETE` on them.
 
 ### Fixed
 
+- Oracle connections now turn on TCP keepalive, so a session left idle is less likely to be dropped by a NAT or firewall. It was only ever enabled on a code path that Macs and iPhones do not take. (#2038)
 - On iPhone and iPad, connecting to a database on your own network now asks for Local Network access when it is actually needed, instead of guessing from the address. Networks that use public addresses were never asked about, so those connections failed with an unhelpful error. (#2040)
 - Connecting with no network, or on a captive portal, no longer reports a Local Network permission problem on iPhone and iPad. (#2040)
 - An open tab now keeps running against the database it was opened on, so changing the database in the sidebar no longer breaks it with a "table doesn't exist" error. (#2026)
