@@ -59,7 +59,7 @@ struct ElasticsearchQueryBuilderEncodingTests {
     func filteredRoundTrip() {
         let query = builder.buildFilteredQuery(
             index: "users",
-            filters: [(column: "age", op: ">", value: "21")],
+            filters: [PluginQueryFilter(column: "age", op: ">", value: "21")],
             logicMode: "AND",
             sorts: [ElasticsearchSortSpec(column: "name", ascending: true)],
             limit: 100,
@@ -194,12 +194,12 @@ struct ElasticsearchQueryDSLTests {
     func caseInsensitiveGated() {
         let on = ElasticsearchQueryBuilder.clause(
             for: ElasticsearchFilterSpec(column: "status", op: "CONTAINS", value: "x"),
-            fields: keywordField, caseInsensitive: true
+            fields: keywordField, supportsCaseInsensitive: true
         )
         #expect((on["wildcard"] as? [String: Any]).map { ($0["status"] as? [String: Any])?["case_insensitive"] as? Bool } == true)
         let off = ElasticsearchQueryBuilder.clause(
             for: ElasticsearchFilterSpec(column: "status", op: "CONTAINS", value: "x"),
-            fields: keywordField, caseInsensitive: false
+            fields: keywordField, supportsCaseInsensitive: false
         )
         let offOptions = (off["wildcard"] as? [String: Any])?["status"] as? [String: Any]
         #expect(offOptions?["case_insensitive"] == nil)
