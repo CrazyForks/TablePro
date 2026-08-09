@@ -22,6 +22,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Autocomplete now keeps suggesting tables and columns after a connection drops and reconnects on its own. The reconnect cleared the schema it had loaded and never asked for it again, so a window that looked connected offered nothing but keywords for the rest of the session.
+- The JSON view of a result now updates when you run another query. It kept showing the previous result until you switched to the data grid and back, and a query that returned the same number of rows never updated at all.
+- The JSON view shows the whole result again when no row is selected. A selection left over from an earlier query made it show an empty list, and a column filter made it show the wrong rows.
+- Running a query now clears the row selection from the previous result, so the row inspector and Copy act on rows you actually picked.
+- Double-clicking a word in the SQL editor selects it again, including the last word in the query. It selected nothing when text was already selected, and stayed dead until you clicked once somewhere else.
+- Triple-clicking selects the line under the pointer, and both now act on the word or line you clicked rather than wherever the cursor happened to be.
+- Text in a read-only editor, such as the JSON view of a result, can now be clicked and selected. Only dragging worked before.
 - AI chat replies now stream smoothly instead of arriving in visible jumps, and the panel no longer slows down as a reply grows. Every update used to redraw every message on screen.
 - The first words of an AI reply now appear as soon as they arrive, instead of waiting for the next batch.
 - Bold, italic, code, and link markers no longer flash as raw punctuation while an AI reply is still being written.
