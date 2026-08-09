@@ -20,7 +20,7 @@ internal final class WindowManager {
 
     // MARK: - Open
 
-    internal func openTab(payload: EditorTabPayload, activate: Bool = true) {
+    internal func openTab(payload: EditorTabPayload, activate: Bool = true, autoConnect: Bool = false) {
         let t0 = Date()
         Self.lifecycleLogger.info(
             "[open] WindowManager.openTab start payloadId=\(payload.id, privacy: .public) connId=\(payload.connectionId, privacy: .public) intent=\(String(describing: payload.intent), privacy: .public) skipAutoExecute=\(payload.skipAutoExecute) activate=\(activate)"
@@ -36,7 +36,11 @@ internal final class WindowManager {
             preCreatedSessionState = nil
         }
 
-        let controller = TabWindowController(payload: payload, sessionState: preCreatedSessionState)
+        let controller = TabWindowController(
+            payload: payload,
+            sessionState: preCreatedSessionState,
+            autoConnect: autoConnect
+        )
         guard let window = controller.window else {
             Self.lifecycleLogger.error(
                 "[open] WindowManager.openTab failed: controller has no window payloadId=\(payload.id, privacy: .public)"
@@ -105,6 +109,29 @@ internal final class WindowManager {
 
     internal func hasOpenWindow(for connectionId: UUID) -> Bool {
         controllers.values.contains { $0.payload.connectionId == connectionId }
+    }
+
+    /// Every connection window from the moment it is created, including one that has not
+    /// connected yet. `WindowLifecycleMonitor` only learns about a window once its content
+    /// view mounts, which needs a live session.
+    internal func allConnectionIds() -> Set<UUID> {
+        Set(controllers.values.map(\.payload.connectionId))
+    }
+
+    internal func window(for connectionId: UUID) -> NSWindow? {
+        controllers.values
+            .first { $0.payload.connectionId == connectionId && $0.window?.isVisible == true }?
+            .window
+    }
+
+    internal func connectionIdsRetainingRestoreIntent() -> [UUID] {
+        var seen = Set<UUID>()
+        return controllers.values.compactMap { controller -> UUID? in
+            guard let splitVC = controller.window?.contentViewController as? MainSplitViewController,
+                  splitVC.retainsRestoreIntent else { return nil }
+            let connectionId = controller.payload.connectionId
+            return seen.insert(connectionId).inserted ? connectionId : nil
+        }
     }
 
     internal func closeWindow(for connectionId: UUID) {

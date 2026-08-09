@@ -36,6 +36,7 @@ internal enum WorkspaceRailStore {
     /// cached, so a refresh can never blank the list it is refreshing.
     internal static var entries: [WorkspaceRailEntry] {
         let openIds = WindowLifecycleMonitor.shared.allConnectionIds()
+            .union(WindowManager.shared.allConnectionIds())
         guard !openIds.isEmpty else { return [] }
 
         let sessions = DatabaseManager.shared.activeSessions
