@@ -3,6 +3,139 @@
     <channel>
         <title>TablePro</title>
         <item>
+            <title>0.64.0</title>
+            <pubDate>Mon, 10 Aug 2026 16:19:26 +0000</pubDate>
+            <sparkle:version>117</sparkle:version>
+            <sparkle:shortVersionString>0.64.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description><![CDATA[<h3>Added</h3>
+<ul>
+<li>Match Case in the filter operator menu, on every database that can express it. (#2048)</li>
+<li>Oracle SYSDBA and SYSOPER logons, on Mac and mobile. (#2039)</li>
+<li>Oracle in TablePro Mobile, with a Service Name or SID picker. (#2033)</li>
+<li>A workspace rail listing every open connection and database, with its own shortcuts. (#1282)</li>
+<li>Disconnect and Reconnect, from the Database menu, the rail, or the connection list.</li>
+<li>A Database menu, plus Minimize, Zoom, Move Tab to New Window, Show Toolbar, and Customize Toolbar.</li>
+<li>Show Object Icons, to turn sidebar icons off.</li>
+<li>Redshift external schemas now list their tables, marked in the sidebar and opened read-only.</li>
+</ul>
+<h3>Changed</h3>
+<ul>
+<li>The menu bar is rebuilt on native macOS menus, so every command follows the window you are using.</li>
+<li>`Cmd+F` finds in whatever is in front of you: rows in a table, text in the editor, the CSV inspector.</li>
+<li>Connecting fills the window and names the step it is on, and a failure shows the database's own error.</li>
+<li>Running a query or opening a table replaces whatever that tab was already running.</li>
+<li>Reopening the last session connects the window you land on first.</li>
+<li>A saved pre-connect script no longer runs on an automatic reopen.</li>
+<li>Settings opens in a standard preferences window.</li>
+<li>A tab's subtitle names the database it is bound to, and its toolbar repoints only that tab. (#2026)</li>
+<li>MCP and AI table tools take a `database` argument, so another database can be inspected. (#2026)</li>
+<li>Building from source now needs XcodeGen.</li>
+</ul>
+<h3>Removed</h3>
+<ul>
+<li>Show Tables Sidebar and Show Favorites Sidebar from the menu bar.</li>
+<li>The "Group all connections in one window" setting. Each connection has its own window. (#1282)</li>
+</ul>
+<h3>Fixed</h3>
+<ul>
+<li>A tab keeps running against the database it was opened on, so changing database no longer breaks it or writes to the wrong place. (#2026)</li>
+<li>Menu commands act on the selected row, column, and editor, and stay disabled when they would do nothing.</li>
+<li>A reconnect brings every window's tabs back, each in the window it was in.</li>
+<li>Window and tab names follow what the window is showing, and a name you chose is kept.</li>
+<li>Tabs are saved before a session ends, and a window that never loaded tabs no longer deletes them.</li>
+<li>A cancelled or failed connect leaves the window usable.</li>
+<li>A connection unreachable at launch is reopened next time, and reconnects once the server is up.</li>
+<li>Opening a connection that already has a window reuses it, and MCP-opened windows connect.</li>
+<li>Row counts refine to an exact count, and stop when you close the window or leave the table. (#2059)</li>
+<li>Clicking through the sidebar no longer loads tables you have left, or shows the previous table's rows. (#2058)</li>
+<li>Stop cancels reads only, so it can no longer cut off a save or a schema change.</li>
+<li>A brief SSH tunnel reconnect no longer closes tabs, and a dead tunnel offers to retry.</li>
+<li>The JSON view follows the grid's sort, filters, and hidden columns, and updates with every query.</li>
+<li>The editor restores your cursor and selection, and keeps autocomplete after a reconnect.</li>
+<li>AI replies stream smoothly, render markdown as they arrive, and no longer slow the panel down.</li>
+<li>Claude, Gemini, and local models no longer fail on thinking and image settings. (#2031)</li>
+<li>Filters compare text columns as text, match NULL and TRUE literally, and no longer break IS EMPTY. (#2029)</li>
+<li>Alerts, focus, calendars, number formats, and Reduce Motion follow system conventions.</li>
+<li>Oracle connections turn on TCP keepalive, so idle sessions survive. (#2038)</li>
+<li>iPhone and iPad ask for Local Network access only when it is needed. (#2040)</li>
+</ul>
+<h3>Security</h3>
+<ul>
+<li>Requests to TablePro's own servers require TLS again.</li>
+<li>Updated Sparkle to 2.9.5, patching CVE-2026-47121 and CVE-2026-47122 in the updater.</li>
+</ul>
+]]></description>
+            <enclosure url="https://github.com/TableProApp/TablePro/releases/download/v0.64.0/TablePro-0.64.0-arm64.zip" length="21756902" type="application/octet-stream" sparkle:edSignature="JeNIX/rJxgU5GCItB9BdgFY8kjFg0hlrl8dYOhfhX+1oSDbzTT+lCcD58n02MrxSigF7VzjZip8lVoKkAQu6Dg=="/>
+        </item>
+        <item>
+            <title>0.64.0</title>
+            <pubDate>Mon, 10 Aug 2026 16:19:27 +0000</pubDate>
+            <sparkle:version>117</sparkle:version>
+            <sparkle:shortVersionString>0.64.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[<h3>Added</h3>
+<ul>
+<li>Match Case in the filter operator menu, on every database that can express it. (#2048)</li>
+<li>Oracle SYSDBA and SYSOPER logons, on Mac and mobile. (#2039)</li>
+<li>Oracle in TablePro Mobile, with a Service Name or SID picker. (#2033)</li>
+<li>A workspace rail listing every open connection and database, with its own shortcuts. (#1282)</li>
+<li>Disconnect and Reconnect, from the Database menu, the rail, or the connection list.</li>
+<li>A Database menu, plus Minimize, Zoom, Move Tab to New Window, Show Toolbar, and Customize Toolbar.</li>
+<li>Show Object Icons, to turn sidebar icons off.</li>
+<li>Redshift external schemas now list their tables, marked in the sidebar and opened read-only.</li>
+</ul>
+<h3>Changed</h3>
+<ul>
+<li>The menu bar is rebuilt on native macOS menus, so every command follows the window you are using.</li>
+<li>`Cmd+F` finds in whatever is in front of you: rows in a table, text in the editor, the CSV inspector.</li>
+<li>Connecting fills the window and names the step it is on, and a failure shows the database's own error.</li>
+<li>Running a query or opening a table replaces whatever that tab was already running.</li>
+<li>Reopening the last session connects the window you land on first.</li>
+<li>A saved pre-connect script no longer runs on an automatic reopen.</li>
+<li>Settings opens in a standard preferences window.</li>
+<li>A tab's subtitle names the database it is bound to, and its toolbar repoints only that tab. (#2026)</li>
+<li>MCP and AI table tools take a `database` argument, so another database can be inspected. (#2026)</li>
+<li>Building from source now needs XcodeGen.</li>
+</ul>
+<h3>Removed</h3>
+<ul>
+<li>Show Tables Sidebar and Show Favorites Sidebar from the menu bar.</li>
+<li>The "Group all connections in one window" setting. Each connection has its own window. (#1282)</li>
+</ul>
+<h3>Fixed</h3>
+<ul>
+<li>A tab keeps running against the database it was opened on, so changing database no longer breaks it or writes to the wrong place. (#2026)</li>
+<li>Menu commands act on the selected row, column, and editor, and stay disabled when they would do nothing.</li>
+<li>A reconnect brings every window's tabs back, each in the window it was in.</li>
+<li>Window and tab names follow what the window is showing, and a name you chose is kept.</li>
+<li>Tabs are saved before a session ends, and a window that never loaded tabs no longer deletes them.</li>
+<li>A cancelled or failed connect leaves the window usable.</li>
+<li>A connection unreachable at launch is reopened next time, and reconnects once the server is up.</li>
+<li>Opening a connection that already has a window reuses it, and MCP-opened windows connect.</li>
+<li>Row counts refine to an exact count, and stop when you close the window or leave the table. (#2059)</li>
+<li>Clicking through the sidebar no longer loads tables you have left, or shows the previous table's rows. (#2058)</li>
+<li>Stop cancels reads only, so it can no longer cut off a save or a schema change.</li>
+<li>A brief SSH tunnel reconnect no longer closes tabs, and a dead tunnel offers to retry.</li>
+<li>The JSON view follows the grid's sort, filters, and hidden columns, and updates with every query.</li>
+<li>The editor restores your cursor and selection, and keeps autocomplete after a reconnect.</li>
+<li>AI replies stream smoothly, render markdown as they arrive, and no longer slow the panel down.</li>
+<li>Claude, Gemini, and local models no longer fail on thinking and image settings. (#2031)</li>
+<li>Filters compare text columns as text, match NULL and TRUE literally, and no longer break IS EMPTY. (#2029)</li>
+<li>Alerts, focus, calendars, number formats, and Reduce Motion follow system conventions.</li>
+<li>Oracle connections turn on TCP keepalive, so idle sessions survive. (#2038)</li>
+<li>iPhone and iPad ask for Local Network access only when it is needed. (#2040)</li>
+</ul>
+<h3>Security</h3>
+<ul>
+<li>Requests to TablePro's own servers require TLS again.</li>
+<li>Updated Sparkle to 2.9.5, patching CVE-2026-47121 and CVE-2026-47122 in the updater.</li>
+</ul>
+]]></description>
+            <enclosure url="https://github.com/TableProApp/TablePro/releases/download/v0.64.0/TablePro-0.64.0-x86_64.zip" length="23036941" type="application/octet-stream" sparkle:edSignature="7Z+13+cX7rRX7M2jAsRSRiJr74eyzb2Uska76rb6395SuCt3ttk+ybf+lMvd7hMSWmQGgf4ewOX6Rh85tbNgDg=="/>
+        </item>
+        <item>
             <title>0.63.0</title>
             <pubDate>Wed, 05 Aug 2026 13:34:43 +0000</pubDate>
             <sparkle:version>116</sparkle:version>
