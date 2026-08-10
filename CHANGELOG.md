@@ -9,161 +9,145 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- The Window menu gained Minimize, Zoom, and Move Tab to New Window, and the View menu gained Show Toolbar and Customize Toolbar. All were missing.
-- The Database menu holds New Database, New Table, New View, Show Table Structure, Edit View Definition, and Table Maintenance. These were only in the sidebar's right-click menu, so they could not be given a shortcut in System Settings.
-- Filter rows now have a Match Case option in the operator menu. Contains, not contains, starts with, and ends with ignore case on every database that can express it, so PostgreSQL and DuckDB now behave like MySQL and SQLite already did. Equals, IN, and regex still match case until you say otherwise. (#2048)
-- Databases whose collation decides case sensitivity, such as MySQL and SQL Server, show the option greyed out with the reason, as do Cassandra and Redis, which cannot ignore case at all. (#2048)
-- MongoDB, Elasticsearch, DynamoDB, and etcd filters can now match case. They always ignored it before, with no way to turn that off. (#2048)
-- Oracle connections can now sign in as SYSDBA or SYSOPER, on both Mac and mobile. Administrative logons previously had no way to connect. (#2039)
-- Oracle now works in TablePro Mobile: connect, browse schemas and tables, run queries, and edit rows, with a Service Name or SID picker and the same SSL modes as the Mac app. (#2033)
-- When an Oracle listener rejects the connect identifier, the connection form now names which one was wrong and offers to switch between Service Name and SID in one tap. (#2033)
-- Sidebar object icons can be turned off for a plain list of names. Right-click anywhere in the sidebar and use View Options, or toggle Show Object Icons from the View menu or Settings > General. Tables staged for truncate or delete keep their marker.
-- A workspace rail on the leading edge of the sidebar lists every connection and database you have open as a tinted icon, so one click switches to it. Switching database adds an entry when the one you leave has work in it, and reuses the entry when it does not. Hover an icon for its full name, host, and database. It appears once a second workspace is open. Drag icons to reorder them, and hide the rail from the View menu or Settings > General. (#1282)
-- Show Previous Workspace and Show Next Workspace move through the rail in the order it displays, on `Ctrl+Cmd+Up` and `Ctrl+Cmd+Down`. A shortcut you assigned yourself wins over a default added in a later release, and the default comes back if you reassign yours. (#1282)
-- Right-click a workspace in the rail to close every tab in it. A window holding a tab in another database stays open. (#1282)
-- The workspace rail takes the keyboard: arrow keys move the highlight, typing jumps to a name, and Return opens the workspace you land on. (#1282)
-- Disconnect and Reconnect in the Database menu. Disconnecting ends the session without closing the window, which shows a Reconnect screen in place of its tabs. Your tabs are saved before the session ends. You can also right-click a workspace in the rail, or a connection in the connection list, to disconnect it.
-- Disconnecting asks first only when a window has unsaved changes or a query still running. A connection you disconnected is not reopened the next time you launch, and clicking back into its window no longer reconnects it on its own.
-- Redshift external schemas now list their tables. Spectrum, federated query, cross-database, and datashare schemas showed up empty because their tables are not in the standard catalog.
-- External schemas are marked in the sidebar, and their tables show an external icon. External tables open read-only, because Redshift rejects `UPDATE` and `DELETE` on them.
-
-### Fixed
-
-- Find and Find Next now act on the editor you are typing in instead of always the query editor.
-- Toolbar buttons no longer go dead while a query is running. The connection is still live, and the matching menu commands stayed enabled all along.
-- The AI chat Insert button could target a different window's editor than the one in front.
-
-- Find, Find Next and Find Previous no longer stay available when there is nothing to search.
-- Menu commands that need a database now stay disabled while a window is connecting, after a failed connect, and after a disconnect. Truncate Table, Delete and Add Row could previously still be chosen on a window whose session was gone.
-
-- Insert Row Above, Insert Row Below, Insert Column Left, Insert Column Right, Split Column and Merge Columns in the Edit menu now act on the selected row or column instead of always the first one.
-- New Tab no longer looks available on the welcome, settings, connection and integrations windows, where it did nothing.
-- Deleting a query history entry now selects the next entry reliably instead of racing a timer.
-- With Vim mode on, an editor in a background tab no longer swallows Escape for the whole app.
-- Data grid shortcuts no longer stop working after switching between windows while a text field had focus.
+- Minimize, Zoom, and Move Tab to New Window in the Window menu, and Show Toolbar and Customize Toolbar in the View menu.
+- A Database menu holding New Database, New Table, New View, Show Table Structure, Edit View Definition, and Table Maintenance, so each can take a shortcut.
+- Match Case in the filter operator menu. Contains, not contains, starts with, and ends with now ignore case on every database that can express it. (#2048)
+- Databases whose collation decides case sensitivity, such as MySQL and SQL Server, show Match Case greyed out with the reason, as do Cassandra and Redis. (#2048)
+- Case-sensitive matching for MongoDB, Elasticsearch, DynamoDB, and etcd filters, which always ignored case before. (#2048)
+- Oracle SYSDBA and SYSOPER logons, on Mac and mobile. (#2039)
+- Oracle in TablePro Mobile: browse schemas and tables, run queries, and edit rows, with a Service Name or SID picker and the Mac app's SSL modes. (#2033)
+- A rejected Oracle connect identifier now names which one was wrong and offers to switch between Service Name and SID in one tap. (#2033)
+- Show Object Icons, to turn sidebar icons off for a plain list of names. Right-click the sidebar for View Options, or use the View menu or Settings > General.
+- A workspace rail on the leading edge of the sidebar listing every open connection and database, so one click switches to it. Drag to reorder, hide from the View menu or Settings > General. (#1282)
+- Show Previous Workspace and Show Next Workspace on `Ctrl+Cmd+Up` and `Ctrl+Cmd+Down`. (#1282)
+- Close every tab in a workspace from its right-click menu in the rail. (#1282)
+- Keyboard control of the workspace rail: arrows move the highlight, typing jumps to a name, Return opens. (#1282)
+- Disconnect and Reconnect in the Database menu, also on a workspace in the rail and a connection in the list. Tabs are saved first, and the window shows a Reconnect screen instead of closing.
+- Redshift external schemas now list their tables. They are marked in the sidebar and open read-only, because Redshift rejects `UPDATE` and `DELETE` on them.
 
 ### Changed
 
-- Building from source now needs XcodeGen. Both Xcode projects are generated from `project.yml` by `scripts/generate-project.sh` and are no longer in git, so signing settings live in `Configs/Secrets.xcconfig` instead of a project file you had to keep out of your commits.
-- Settings opens in a standard preferences window with a toolbar instead of a tab strip.
-
-- The menu bar is rebuilt on native macOS menus. Every command now enables and disables from the state of the window you are actually using, so items no longer read as available when they are not, or stay greyed out after you switch windows.
+- The menu bar is rebuilt on native macOS menus, so every command enables and disables from the state of the window you are using.
 - New Database and Query menus hold the connection, database, and table commands that used to be spread across File, Edit, and View.
-- `Cmd+F` finds in whatever is in front of you: it filters rows in a table tab, searches the text in the SQL editor, and filters the CSV inspector. Toggle Filter Bar also has its own `Cmd+Option+F`, and Focus Sidebar Filter moved to `Ctrl+Cmd+Option+F`. Shortcuts you assigned yourself are untouched.
-- The CSV and JSON editing commands are grouped into one Edit submenu and now dim per command rather than all at once.
-- Connecting to a database now fills the window instead of framing a spinner with an empty sidebar and inspector, and it names the step it is on: opening the tunnel, negotiating encryption, authenticating, preparing the session. PostgreSQL, CockroachDB, Redshift, ClickHouse, and Redis report their own handshake steps; the rest report the steps around the driver. A step that stalls says so rather than spinning silently.
-- A connection that fails now shows the database's own error wherever the connect started, including from a link or a database file, and offers Copy Details. Those routes used to drop the real message and report only that the connection had closed.
-- Opening a table or query from a link now opens its window straight away, so a slow connect has somewhere to report progress and a failed one has somewhere to explain itself.
-- A saved pre-connect script no longer runs when the app reopens a session on its own. The window waits with a Connect button, which asks before running it.
-- Running a query or opening a table now replaces whatever that tab was already running, instead of being ignored until the first one finished.
-- Clicking through tables quickly no longer stutters on a connection over an SSH tunnel. Stopping the query you navigated away from used to hold up the click for up to 160ms while it opened a second connection to deliver the cancel.
-
-### Fixed
-
-- A connection with more than one window open now brings every window's tabs back when it reconnects, instead of leaving them all empty. Each window used to stand down the moment it saw another window on the same connection, so none of them restored anything.
-- Reopening a connection now puts each tab back in the window it was in. A window that held more than one tab came back as one window per tab, and a window that was empty was filled with the next window's tab.
-- The row count under the grid no longer appears and then vanishes a moment later. A count the database could not work out now leaves the estimate on screen instead of blanking it.
-- Table row counts are exact again when the estimate is below your "count rows if estimate less than" setting. Opening a table showed the estimate and never refined it, and a filtered count never updated at all.
-- Closing a window now stops an exact row count that is still running, and pointing a tab at another table stops the count for the table you left. Both used to run to completion against a server nobody was waiting on. (#2059)
-- Clicking quickly through the sidebar no longer keeps loading column details for tables you have already left. Each abandoned table held the connection for another 75-90ms, so every table clicked after it waited that much longer. (#2058)
-- Clicking a table while another one is still loading now loads the table you clicked. The tab used to fill with the previous table's rows under the new table's name, and the table you clicked never loaded at all.
-- Stop no longer aborts a save, a discard, or a schema change. It cancels reads only, so a write can no longer be cut off half way.
-- Ending a session while its window stayed open could lose that window's tabs. Tabs are now written to disk before the session goes away, which also covers the disconnect tool used by AI clients and Reset Sample Database.
-- A window that reconnects brings its tabs back instead of coming back empty. Rebuilding a window's contents made it count as two windows, and the restore that refills the tabs stands down when it sees a second window on the connection.
-- Closing a window that never loaded any tabs no longer deletes the tabs saved for that connection. Only a window that had tabs can report that you closed them all.
-- A window being connected is now named after the connection instead of "SQL Query", which named a tab it did not have yet.
-- A window that loses its connection no longer keeps the name of the table it stopped showing. Its name and its native tab label now follow what the window is actually displaying.
-- The titlebar no longer repeats itself, so a window with no tabs open reads "My Database" rather than "My Database - My Database".
-- A tab you named yourself is no longer renamed behind your back when the window reconnects. Any title ending in "Query" used to be treated as a placeholder and replaced.
-- Window naming now works in translated builds. The rule that decided whether a title was a placeholder compared it against English text, so it never matched outside English.
-- Renaming a connection now updates the name of any window already open on it.
-- A dropped SSH tunnel that ran out of reconnect attempts left the window spinning forever with no way back. It now reports what happened and offers to try again.
-- A brief tunnel reconnect no longer closes your tabs. The window used to tear down the whole session on the blip, taking unsaved query edits with it.
-- The sidebar's filter field no longer sits over an empty sidebar while a connection is still being established.
-- The JSON view of a result now follows the grid: rows come in the order you sorted them, a column filter leaves its rows out, and hidden columns stay hidden. It used to show every row in fetch order, including rows the filter had removed, and columns you had hidden.
-- Copy JSON in the JSON view and Copy as JSON in the grid now produce the same output for the same rows.
-- The JSON view now updates when you change a column filter without running a new query.
-- The SQL editor now returns the cursor to where you left it when a tab is reopened or the app restarts, and restores what you had selected, not just the caret. The saved position was never applied.
-- Autocomplete now keeps suggesting tables and columns after a connection drops and reconnects on its own. The reconnect cleared the schema it had loaded and never asked for it again, so a window that looked connected offered nothing but keywords for the rest of the session.
-- The JSON view of a result now updates when you run another query. It kept showing the previous result until you switched to the data grid and back, and a query that returned the same number of rows never updated at all.
-- The JSON view shows the whole result again when no row is selected. A selection left over from an earlier query made it show an empty list, and a column filter made it show the wrong rows.
-- Running a query now clears the row selection from the previous result, so the row inspector and Copy act on rows you actually picked.
-- Double-clicking a word in the SQL editor selects it again, including the last word in the query. It selected nothing when text was already selected, and stayed dead until you clicked once somewhere else.
-- Triple-clicking selects the line under the pointer, and both now act on the word or line you clicked rather than wherever the cursor happened to be.
-- Text in a read-only editor, such as the JSON view of a result, can now be clicked and selected. Only dragging worked before.
-- AI chat replies now stream smoothly instead of arriving in visible jumps, and the panel no longer slows down as a reply grows. Every update used to redraw every message on screen.
-- The first words of an AI reply now appear as soon as they arrive, instead of waiting for the next batch.
-- Bold, italic, code, and link markers no longer flash as raw punctuation while an AI reply is still being written.
-- Code blocks in AI replies no longer jump to a different height the moment they finish.
-- Oracle connections now turn on TCP keepalive, so a session left idle is less likely to be dropped by a NAT or firewall. It was only ever enabled on a code path that Macs and iPhones do not take. (#2038)
-- On iPhone and iPad, connecting to a database on your own network now asks for Local Network access when it is actually needed, instead of guessing from the address. Networks that use public addresses were never asked about, so those connections failed with an unhelpful error. (#2040)
-- Connecting with no network, or on a captive portal, no longer reports a Local Network permission problem on iPhone and iPad. (#2040)
-- The sidebar no longer says a database has no tables while its table list is still loading. Connecting showed "No tables" until the first fetch finished, and stayed there if the fetch never ran.
-- Right-clicking a data grid row that is not selected now acts on that row instead of the previous selection.
-- Undo and Redo in the Edit menu now name the action they will undo and grey out when there is nothing to undo.
-- Escape during Chinese, Japanese, or Korean text entry in the SQL editor no longer cancels the composition and leaves half-typed text behind.
-- Automatic keyword capitalization in the SQL editor can now be undone, and no longer leaves the saved query out of step with what is on screen.
-- The text cursor now reappears in the SQL editor after another view takes focus.
-- Clicks in the SQL editor's find bar no longer fall through to the text underneath.
-- Confirmations that delete or drop something now mark the confirming button as destructive, Return no longer triggers it, and Escape cancels whatever the cancelling button is called.
-- The SSH host key warning can now be dismissed with Escape, which disconnects rather than connecting.
-- Date and time cells now render in the same calendar the database uses, instead of the calendar implied by the Mac's region.
-- Sizes and durations in the server dashboard now use the system's format, so they follow the language and decimal separator you use.
-- Collapsing the results pane by dragging or double-clicking the divider is now remembered for that tab.
-- Publishing to a team library, choosing a Cloudflare or Cloud SQL binary, and other prompts now appear as sheets attached to their window instead of blocking the whole app.
-- Tabbing through Settings > Keyboard no longer gets stuck in a shortcut field. Press Space or Return to start recording.
-- Copying an ER diagram now uses the standard Edit > Copy command, so it follows your own shortcut.
-- Row insert and remove animations, and the AI chat typing indicator, now honour Reduce Motion.
-- The AI editor context menu no longer shows Format SQL as available when there is nothing to format.
-- Requests to TablePro's own servers now require TLS again, instead of inheriting the relaxed transport policy that database connections need.
-- Switching to a connection that is already open now returns to the tab you last used there, instead of whichever of its tabs happened to come first. This also applies to the connection switcher. (#1282)
-- Reopening the last session while the database server is still starting now shows the reason in the window with a Try Again button, instead of a spinner that never stops.
-- Starting the database server after that and switching back to the window now reconnects it. The window used to stay stuck even once the server was up.
-- Cancelling a connection now leaves the window open with Connect and Manage Connections, so there is always a way back to the connection list without going through the Dock.
-- A connection that could not be reached at launch is now reopened next time. It used to be dropped from the last session as if it had been cancelled.
-- An open CSV or JSON inspector window no longer stops the last session from reopening at launch.
-- Opening a connection that already has a window now reuses that window instead of opening a second one.
-- Closing a window while it is still connecting no longer leaves the connection running with no window attached.
-- Declining the password prompt while a window is connecting now leaves that window usable instead of connecting forever.
-- A connection or table window opened by an MCP client now connects, instead of showing a spinner for a connection nothing was opening.
-- Closing a window after its connection ended no longer deletes that connection's saved tabs.
-- An open tab now keeps running against the database it was opened on, so changing the database in the sidebar no longer breaks it with a "table doesn't exist" error. (#2026)
-- Saving a table structure change no longer moves the sidebar and toolbar to that tab's database. (#2026)
-- Row edits, fetch all rows, and multi-statement scripts now write to the database the tab is bound to, not whichever database another tab last used. (#2026)
-- Switching between tabs no longer changes the connection's saved default database. (#2026)
-- Refreshing after a save no longer reloads windows that are browsing a different database. (#2026)
-- Hidden columns are now applied on a tab bound to a database other than the one selected in the sidebar. (#2026)
-- Asking the AI chat or an MCP client to list tables or run a query no longer changes the database selected in the app. (#2026)
-- Exporting now reads from the database the export was started for, and no longer opens a separate connection for every database on the server when listing them. (#2026)
-- Exporting a query's remaining rows while disconnected now reports the error instead of leaving the progress sheet up forever. (#2026)
-- Stopping a query now cancels the query itself rather than whichever background metadata read finished last. (#2026)
-- Reopening a window no longer loses a table tab's saved sort and page when the connection was still connecting. (#2026)
-- Filtering a text column by a value that looks like a number, such as 68, now compares it as text. It used to compare as a number, which returned the wrong rows and stopped the database using the column's index. (#2029)
-- Typing NULL, TRUE, or FALSE into a filter on a text column now matches that text instead of turning into the SQL keyword, so those values can be filtered for. (#2029)
-- IS EMPTY on a number, date, or boolean column now checks only for NULL, instead of also comparing against an empty string, which some databases reject. (#2029)
-- AI chat with a Claude API key no longer fails with a 400 error on every message. The reasoning effort was sent in a field the API rejects. (#2031)
-- Picking Extra High reasoning effort, Haiku 4.5, or any Claude model newer than Opus 4.7 no longer fails the request. Each one sent thinking settings the API refuses. (#2031)
-- Claude replies now fill in the Reasoning block again instead of leaving it empty after a long pause. (#2031)
-- Gemini models can now use thinking and accept image attachments. Both were switched off for the whole provider, so no Gemini model could reason or read an image.
-- Reasoning effort is now offered for OpenRouter, Ollama, llama.cpp, MLX, OpenCode Zen, and custom endpoints, so a local reasoning model can be given an effort.
-- The reasoning effort picker now lists the levels the chosen model actually accepts, read from the provider instead of a built-in table.
-- Model lists now carry each model's real output limit and thinking support, so replies are no longer capped at a guessed value.
+- `Cmd+F` finds in whatever is in front of you: rows in a table tab, text in the SQL editor, the CSV inspector. Toggle Filter Bar takes `Cmd+Option+F` and Focus Sidebar Filter takes `Ctrl+Cmd+Option+F`.
+- The CSV and JSON editing commands are grouped into one Edit submenu and dim per command rather than all at once.
+- Settings opens in a standard preferences window with a toolbar instead of a tab strip.
+- Connecting fills the window and names the step it is on: opening the tunnel, negotiating encryption, authenticating, preparing the session. A step that stalls says so.
+- A failed connection shows the database's own error wherever the connect started, with Copy Details.
+- Opening a table or query from a link opens its window straight away, so a slow connect has somewhere to report progress.
+- A saved pre-connect script no longer runs when the app reopens a session on its own. The window waits with a Connect button.
+- Running a query or opening a table replaces whatever that tab was already running instead of waiting for it.
+- Clicking through tables quickly no longer stutters over an SSH tunnel. Cancelling the query you left used to hold up the click for up to 160ms.
+- Reopening the last session connects the window you land on right away and the rest when you switch to them.
+- A new connection window opens over the window you were in rather than cascading. Move a window and it keeps where you put it. (#1282)
+- The sidebar's Tables and Favorites control is a standard segmented control in the toolbar above the sidebar, not over the table content.
+- A tab's window subtitle shows the database it is bound to, for query tabs as well as table tabs. (#2026)
+- Changing a tab's database from its toolbar repoints only that tab and leaves the sidebar where it is. (#2026)
+- `describe_table` and `get_table_ddl` take a `database` argument in AI chat and over MCP, and `list_schemas` takes one in AI chat. (#2026)
+- The Claude, OpenAI, and Codex model menus list the current models.
+- Building from source needs XcodeGen. Both Xcode projects are generated from `project.yml`, so signing settings live in `Configs/Secrets.xcconfig`.
 
 ### Removed
 
-- Show Tables Sidebar and Show Favorites Sidebar are gone from the menu bar and from Settings > Keyboard. The sidebar's own tab control already switches between them.
-- Show Object Icons, Show Object Comments, and Open Project Folder are gone from the menu bar. The first two stay in Settings > General and the sidebar's View Options, and Open Project Folder stays on the welcome window.
-- The "Group all connections in one window" setting is gone. A window shows one tab group, so grouping every connection into it flattened every connection's tabs into a single tab bar, and turning the setting back off never separated the windows it had merged. Each connection now always has its own window and its own tab bar. (#1282)
+- Show Tables Sidebar and Show Favorites Sidebar from the menu bar and Settings > Keyboard. The sidebar's own tab control switches between them.
+- Show Object Icons, Show Object Comments, and Open Project Folder from the menu bar. The first two stay in Settings > General and View Options, and Open Project Folder stays on the welcome window.
+- The "Group all connections in one window" setting. Each connection now always has its own window and tab bar. (#1282)
 
-### Changed
+### Fixed
 
-- Reopening the last session no longer connects every window at once. The window you land on connects right away, and the rest connect when you switch to them.
-- The Claude, OpenAI, and Codex model menus now list the current models.
-- A new connection window now opens over the window you were in rather than cascading, so switching connection from the rail reads as the window changing content. Move a window and it keeps where you put it. (#1282)
-- The sidebar's Tables and Favorites control now sits in the toolbar above the sidebar, next to the list it switches, instead of over the table content. It is a standard segmented control, so it shows which one is selected and works with keyboard control.
-- A tab's window subtitle now shows the database it is bound to, for query tabs as well as table tabs. (#2026)
-- Changing a tab's database from its toolbar now repoints only that tab and leaves the sidebar where it is. (#2026)
-- `describe_table` and `get_table_ddl` now take a `database` argument, in AI chat and over MCP, so a table in another database can be inspected without changing the database selected in the app. `list_schemas` in AI chat takes one too. (#2026)
+- Find, Find Next, and Find Previous act on the editor you are typing in, and are disabled when there is nothing to search.
+- Toolbar buttons no longer go dead while a query is running.
+- The AI chat Insert button targets the front window's editor.
+- Menu commands that need a database stay disabled while a window is connecting, after a failed connect, and after a disconnect.
+- Insert Row Above, Insert Row Below, Insert Column Left, Insert Column Right, Split Column, and Merge Columns act on the selected row or column instead of the first one.
+- New Tab no longer looks available on the welcome, settings, connection, and integrations windows, where it did nothing.
+- Deleting a query history entry selects the next entry reliably instead of racing a timer.
+- With Vim mode on, an editor in a background tab no longer swallows Escape for the whole app.
+- Data grid shortcuts keep working after switching between windows while a text field had focus.
+- A connection with more than one window open brings every window's tabs back when it reconnects, and each tab returns to the window it was in.
+- The row count under the grid no longer appears and then vanishes. A count the database cannot work out leaves the estimate on screen.
+- Row counts are exact again when the estimate is below your "count rows if estimate less than" setting, including filtered counts.
+- Closing a window, or pointing a tab at another table, stops an exact row count that is still running. (#2059)
+- Clicking quickly through the sidebar no longer keeps loading column details for tables you have left, which held the connection for another 75-90ms each. (#2058)
+- Clicking a table while another is still loading loads the table you clicked, instead of filling the tab with the previous table's rows.
+- Stop cancels reads only, so it can no longer cut off a save, a discard, or a schema change.
+- Tabs are written to disk before a session ends, so ending a session with the window open no longer loses its tabs.
+- Closing a window that never loaded any tabs no longer deletes the tabs saved for that connection.
+- A window being connected is named after the connection instead of "SQL Query".
+- A window that loses its connection no longer keeps the name of the table it stopped showing.
+- The titlebar no longer repeats itself, so a window with no tabs reads "My Database" rather than "My Database - My Database".
+- A tab you named yourself is no longer renamed when the window reconnects, and window naming works in translated builds.
+- Renaming a connection updates the name of any window already open on it.
+- A dropped SSH tunnel that ran out of reconnect attempts reports what happened and offers to try again, instead of spinning forever.
+- A brief tunnel reconnect no longer closes your tabs or loses unsaved query edits.
+- The sidebar's filter field no longer sits over an empty sidebar while a connection is still being established.
+- The JSON view of a result follows the grid: sorted row order, column filters applied, hidden columns hidden.
+- Copy JSON in the JSON view and Copy as JSON in the grid produce the same output for the same rows.
+- The JSON view updates when you change a column filter or run another query, and shows the whole result when no row is selected.
+- Running a query clears the row selection from the previous result, so the row inspector and Copy act on rows you picked.
+- The SQL editor returns the cursor and selection to where you left them when a tab is reopened or the app restarts.
+- Autocomplete keeps suggesting tables and columns after a connection drops and reconnects on its own.
+- Double-clicking a word in the SQL editor selects it again, including the last word in the query.
+- Triple-clicking selects the line under the pointer, and both act on the word or line you clicked rather than the cursor position.
+- Text in a read-only editor, such as the JSON view of a result, can be clicked and selected.
+- AI chat replies stream smoothly, and the panel no longer slows down as a reply grows.
+- The first words of an AI reply appear as soon as they arrive.
+- Bold, italic, code, and link markers no longer flash as raw punctuation while an AI reply is still being written.
+- Code blocks in AI replies no longer jump to a different height when they finish.
+- Oracle connections turn on TCP keepalive, so an idle session is less likely to be dropped by a NAT or firewall. (#2038)
+- On iPhone and iPad, connecting asks for Local Network access when it is needed instead of guessing from the address. (#2040)
+- Connecting with no network, or on a captive portal, no longer reports a Local Network permission problem on iPhone and iPad. (#2040)
+- The sidebar no longer says a database has no tables while its table list is still loading.
+- Right-clicking a data grid row that is not selected acts on that row instead of the previous selection.
+- Undo and Redo name the action they will undo and grey out when there is nothing to undo.
+- Escape during Chinese, Japanese, or Korean text entry in the SQL editor no longer cancels the composition.
+- Automatic keyword capitalization can be undone, and no longer leaves the saved query out of step with the screen.
+- The text cursor reappears in the SQL editor after another view takes focus.
+- Clicks in the SQL editor's find bar no longer fall through to the text underneath.
+- Confirmations that delete or drop something mark the confirming button as destructive, Return no longer triggers it, and Escape cancels.
+- The SSH host key warning can be dismissed with Escape, which disconnects rather than connecting.
+- Date and time cells render in the calendar the database uses, not the one implied by the Mac's region.
+- Sizes and durations in the server dashboard use the system's format, so they follow your language and decimal separator.
+- Collapsing the results pane by dragging or double-clicking the divider is remembered for that tab.
+- Publishing to a team library, choosing a Cloudflare or Cloud SQL binary, and other prompts appear as sheets on their window instead of blocking the app.
+- Tabbing through Settings > Keyboard no longer gets stuck in a shortcut field. Press Space or Return to start recording.
+- Copying an ER diagram uses the standard Edit > Copy command, so it follows your own shortcut.
+- Row insert and remove animations, and the AI chat typing indicator, honour Reduce Motion.
+- The AI editor context menu no longer offers Format SQL when there is nothing to format.
+- Switching to a connection that is already open returns to the tab you last used there, including from the connection switcher. (#1282)
+- Reopening the last session while the server is still starting shows the reason with a Try Again button, and the window reconnects once the server is up.
+- Cancelling a connection leaves the window open with Connect and Manage Connections, so there is always a way back to the connection list.
+- A connection that could not be reached at launch is reopened next time instead of being dropped as if cancelled.
+- An open CSV or JSON inspector window no longer stops the last session from reopening at launch.
+- Opening a connection that already has a window reuses that window instead of opening a second one.
+- Closing a window while it is still connecting no longer leaves the connection running with no window attached.
+- Declining the password prompt while a window is connecting leaves that window usable instead of connecting forever.
+- A connection or table window opened by an MCP client now connects instead of showing a spinner.
+- An open tab keeps running against the database it was opened on, so changing the database in the sidebar no longer breaks it with a "table doesn't exist" error. (#2026)
+- Saving a table structure change no longer moves the sidebar and toolbar to that tab's database. (#2026)
+- Row edits, fetch all rows, and multi-statement scripts write to the database the tab is bound to. (#2026)
+- Switching between tabs no longer changes the connection's saved default database. (#2026)
+- Refreshing after a save no longer reloads windows browsing a different database. (#2026)
+- Hidden columns apply on a tab bound to a database other than the one selected in the sidebar. (#2026)
+- Asking the AI chat or an MCP client to list tables or run a query no longer changes the database selected in the app. (#2026)
+- Exporting reads from the database the export was started for, and no longer opens a connection per database when listing them. (#2026)
+- Exporting a query's remaining rows while disconnected reports the error instead of leaving the progress sheet up. (#2026)
+- Stopping a query cancels the query itself rather than whichever background metadata read finished last. (#2026)
+- Reopening a window no longer loses a table tab's saved sort and page when the connection was still connecting. (#2026)
+- Filtering a text column by a value that looks like a number, such as 68, compares it as text, so the right rows come back and the index is used. (#2029)
+- Typing NULL, TRUE, or FALSE into a filter on a text column matches that text instead of turning into the SQL keyword. (#2029)
+- IS EMPTY on a number, date, or boolean column checks only for NULL, instead of also comparing against an empty string. (#2029)
+- AI chat with a Claude API key no longer fails with a 400 error on every message. (#2031)
+- Extra High reasoning effort, Haiku 4.5, and Claude models newer than Opus 4.7 no longer fail the request. (#2031)
+- Claude replies fill in the Reasoning block again instead of leaving it empty after a long pause. (#2031)
+- Gemini models can use thinking and accept image attachments. Both were switched off for the whole provider.
+- Reasoning effort is offered for OpenRouter, Ollama, llama.cpp, MLX, OpenCode Zen, and custom endpoints.
+- The reasoning effort picker lists the levels the chosen model accepts, read from the provider instead of a built-in table.
+- Model lists carry each model's real output limit and thinking support, so replies are no longer capped at a guessed value.
+
+### Security
+
+- Requests to TablePro's own servers require TLS again, instead of inheriting the relaxed transport policy that database connections need.
 
 ## [0.63.0] - 2026-08-05
 
