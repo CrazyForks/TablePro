@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.64.0] - 2026-08-10
+
 ### Added
 
 - Match Case in the filter operator menu, on every database that can express it. (#2048)
@@ -2795,7 +2797,8 @@ TablePro is a native macOS database client built with SwiftUI and AppKit, design
     - Custom SQL query templates
     - Performance optimized for large datasets
 
-[Unreleased]: https://github.com/TableProApp/TablePro/compare/v0.63.0...HEAD
+[Unreleased]: https://github.com/TableProApp/TablePro/compare/v0.64.0...HEAD
+[0.64.0]: https://github.com/TableProApp/TablePro/compare/v0.63.0...v0.64.0
 [0.63.0]: https://github.com/TableProApp/TablePro/compare/v0.62.0...v0.63.0
 [0.62.0]: https://github.com/TableProApp/TablePro/compare/v0.61.0...v0.62.0
 [0.61.0]: https://github.com/TableProApp/TablePro/compare/v0.60.1...v0.61.0
