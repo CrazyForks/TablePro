@@ -51,7 +51,7 @@ packages:
     path: Packages/TableProOracle
   Sparkle:
     url: https://github.com/sparkle-project/Sparkle
-    majorVersion: 2.0.0
+    majorVersion: 2.9.5
   swift-certificates:
     url: https://github.com/apple/swift-certificates
     majorVersion: 1.19.0

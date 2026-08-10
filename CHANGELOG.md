@@ -64,6 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 
 - Requests to TablePro's own servers require TLS again.
+- Updated Sparkle to 2.9.5, patching CVE-2026-47121 and CVE-2026-47122 in the updater.
 
 ## [0.63.0] - 2026-08-05
 
