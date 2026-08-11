@@ -70,6 +70,10 @@ actor PluginInstaller {
         guard let stagedURL = stagedUpdates[pluginId] else {
             throw PluginError.notFound
         }
+        guard let stagedBundle = Bundle(url: stagedURL) else {
+            throw PluginError.invalidBundle("Cannot create bundle from \(stagedURL.lastPathComponent)")
+        }
+        try PluginCodeSignatureVerifier.verify(bundle: stagedBundle)
         let bundleName = stagedURL.deletingPathExtension().lastPathComponent
         let destURL = userPluginsDir.appendingPathComponent("\(bundleName).tableplugin", isDirectory: true)
         let finalURL = try Self.atomicReplace(stagedBundleURL: stagedURL, destURL: destURL)
@@ -181,7 +185,11 @@ actor PluginInstaller {
             )
         }
 
-        guard let downloadURL = URL(string: binary.downloadURL) else {
+        // The registry manifest is fetched over the network, so the URL it names is untrusted
+        // input. The code-signature check is the real gate, but nothing should be fetched over
+        // cleartext on the way to it.
+        guard let downloadURL = URL(string: binary.downloadURL),
+              downloadURL.scheme?.lowercased() == "https" else {
             throw PluginError.downloadFailed("Invalid download URL")
         }
 

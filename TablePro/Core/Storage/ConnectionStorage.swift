@@ -27,6 +27,10 @@ final class ConnectionStorage {
     /// In-memory cache to avoid re-decoding JSON from file on every access
     private var cachedConnections: [DatabaseConnection]?
 
+    /// Whether the file on disk is the one TablePro last wrote. False once it has been edited by
+    /// something else, which is the signal to refuse to run a connection's password source.
+    private(set) var storeIsTrusted = true
+
     private let fileURL: URL
 
     private let keychain: any KeychainStoring
@@ -78,7 +82,24 @@ final class ConnectionStorage {
         if let cached = cachedConnections { return cached }
 
         guard let data = try? Data(contentsOf: fileURL) else {
+            storeIsTrusted = true
             return []
+        }
+
+        switch ConnectionStoreIntegrity.shared.verify(data, fileURL: fileURL) {
+        case .trusted:
+            storeIsTrusted = true
+        case .unstamped:
+            // An install that predates the tag. Adopt the file as it stands, which is the only
+            // option without a prior baseline, and stamp it so later edits are detectable.
+            ConnectionStoreIntegrity.shared.stamp(data, fileURL: fileURL)
+            storeIsTrusted = true
+        case .modified:
+            Self.logger.warning("connections.json changed outside TablePro; password sources will not run")
+            storeIsTrusted = false
+        case .unavailable:
+            Self.logger.warning("No connection store integrity key; password sources will not run")
+            storeIsTrusted = false
         }
 
         do {
@@ -125,6 +146,9 @@ final class ConnectionStorage {
         do {
             let data = try encoder.encode(storedConnections)
             try data.write(to: fileURL, options: .atomic)
+            // Trust follows the tag. If no tag could be written, later edits are undetectable,
+            // so the store is not treated as trusted.
+            storeIsTrusted = ConnectionStoreIntegrity.shared.stamp(data, fileURL: fileURL)
             cachedConnections = nil
             return true
         } catch {
